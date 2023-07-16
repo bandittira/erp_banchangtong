@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:erp_banchangtong/pages/home/home.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SimpleLoginScreen extends StatefulWidget {
   /// Callback for when this form is submitted successfully. Parameters are (username, password)
@@ -68,21 +68,40 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
 
   Future<void> _submitForm(username, password) async {
     try {
-      var response = await http.post(
-        Uri.parse(
-            "https://10.0.2.2:7209/api/User?username=$username&password=$password"),
-        headers: {'Content-Type': 'application/json'},
-      );
+      var response = await http.post(Uri.parse("http://10.0.2.2:8000/login"),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: jsonEncode({
+            "username": username,
+            "password": password,
+          }));
 
       if (response.statusCode == 200) {
         // Login successful
-        var a = [];
-        a = json.decode(response.body);
-        if (a.isEmpty) {
-          print("Not match");
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        var a = json.decode(response.body);
+        print(a["message"]);
+        if (a["message"] == "Username or Password does not match") {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('username or password does not match'),
+              ),
+            );
+          }
+        } else if (a["message"] == "Login Success") {
+          await prefs.setString('isLogged', "true");
+          await prefs.setString('Fname', a['data'][0]['Fname']);
+          await prefs.setString('Lname', a['data'][0]['Lname']);
+          await prefs.setString('Name', a['data'][0]['Name']);
+          await prefs.setString(
+              'PermissionId', a['data'][0]['PermissionId'].toString());
+              print(prefs.getString('isLogged'));
+          Get.off(() => HomePage());
         } else {
-          Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const Home()));
+          print("Error");
         }
       } else if (response.statusCode == 307) {
         // Redirect
