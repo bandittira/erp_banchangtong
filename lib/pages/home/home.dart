@@ -1,16 +1,26 @@
 import 'package:erp_banchangtong/pages/home/components/product_cards.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+
+import '../scanner/qr_scanner.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
+    PersistentTabController controller;
+    controller = PersistentTabController(initialIndex: 0);
+
+    // ignore: unused_element
     Future<void> removeSharedPreferences() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('isLogged', 'false');
+      prefs.remove('Id');
       prefs.remove('Fname');
       prefs.remove('Lname');
       prefs.remove('PermissionId');
@@ -23,7 +33,6 @@ class HomePage extends StatelessWidget {
           child: Container(
               color: Colors.grey.shade200,
               padding: const EdgeInsets.only(left: 20, right: 20),
-              height: screen.size.height,
               width: screen.size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,16 +73,16 @@ class HomePage extends StatelessWidget {
                           width: 10,
                         ),
                         TextButton(
-                          onPressed: () => {},
+                          onPressed: () => {Get.to(const QRViewExample())},
                           child: Container(
                             width: screen.size.width / 7,
                             height: 50,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.white),
-                            child: const Icon(
-                              Iconsax.setting_44,
-                              color: Colors.black,
+                            child: Icon(
+                              Iconsax.scanner,
+                              color: Colors.grey.shade700,
                             ),
                           ),
                         ),
@@ -92,7 +101,7 @@ class HomePage extends StatelessWidget {
                   ),
                   SizedBox(
                       width: screen.size.width,
-                      height: screen.size.height / 2.85,
+                      height: 280,
                       child: const SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
@@ -101,37 +110,95 @@ class HomePage extends StatelessWidget {
                                 "Nike Air Force",
                                 "20pcs + 8 colors + 12 Sizes",
                                 3600,
-                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/359508076_696228599187153_2661508143351250743_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=730e14&_nc_ohc=Jz2LOjpAdigAX96jsku&_nc_oc=AQmRsJR3dESabwDnMi5hutxBEzjAd8nYgoeAV_UUnQ8O_lS0wh-8R7Kyv21Bi9qlxcUazc2zQcDRkduLoLblAR6E&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfCqz5Y6y8uyg2YKBfDDfnSLXP1Y0zfhAL_vfFPKOimdFQ&oe=64B8E261"),
+                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/361088281_700518162091530_7746397129097762439_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHhvrAiGu6kcwwPOCeLDqA-Pq7IxF-Kz6Y-rsjEX4rPpjediUs4LqxvVdQKQRNSyE-Hn9hpI4gqnOLaH0H0JdSq&_nc_ohc=V-QpC2ac7U0AX8MZFcO&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDSrZEQuX646KGoVNYdgLbYDT1HD_K0difOd_ukhdR1qQ&oe=64C81291"),
                             ProductCard(
                                 "Nike Air Force",
                                 "20pcs + 8 colors + 12 Sizes",
                                 3600,
-                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/360132833_698182282325118_1715481436329912644_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_ohc=jYdP5OyN9ToAX_GSbS0&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfBTvByDzXSNQaGEQi2ggyjIMbB2HndOCnYnHBq4nDMYmQ&oe=64B839AA"),
+                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/361088281_700518162091530_7746397129097762439_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHhvrAiGu6kcwwPOCeLDqA-Pq7IxF-Kz6Y-rsjEX4rPpjediUs4LqxvVdQKQRNSyE-Hn9hpI4gqnOLaH0H0JdSq&_nc_ohc=V-QpC2ac7U0AX8MZFcO&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDSrZEQuX646KGoVNYdgLbYDT1HD_K0difOd_ukhdR1qQ&oe=64C81291"),
                             ProductCard(
                                 "Nike Air Force",
                                 "20pcs + 8 colors + 12 Sizes",
                                 3600,
-                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/358131843_688704116606268_8830508598617913031_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=730e14&_nc_ohc=jeSbWkvDtNYAX9PuJyC&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfCPhxhKCjUGU1jUkt570vjSPzzPlGjSJJGBDlFbWYwYsA&oe=64B8D474"),
+                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/361088281_700518162091530_7746397129097762439_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHhvrAiGu6kcwwPOCeLDqA-Pq7IxF-Kz6Y-rsjEX4rPpjediUs4LqxvVdQKQRNSyE-Hn9hpI4gqnOLaH0H0JdSq&_nc_ohc=V-QpC2ac7U0AX8MZFcO&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDSrZEQuX646KGoVNYdgLbYDT1HD_K0difOd_ukhdR1qQ&oe=64C81291"),
                             ProductCard(
                                 "Nike Air Force",
                                 "20pcs + 8 colors + 12 Sizes",
                                 3600,
-                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/357511545_685904200219593_3767147151628632197_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=730e14&_nc_ohc=OnDk6KabDkkAX8VfGia&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfAXmWRe8bNuwbMoGK4GMpQ05oHadIkeqJWxM4nhHsKubQ&oe=64B8FCE7"),
+                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/361088281_700518162091530_7746397129097762439_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHhvrAiGu6kcwwPOCeLDqA-Pq7IxF-Kz6Y-rsjEX4rPpjediUs4LqxvVdQKQRNSyE-Hn9hpI4gqnOLaH0H0JdSq&_nc_ohc=V-QpC2ac7U0AX8MZFcO&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDSrZEQuX646KGoVNYdgLbYDT1HD_K0difOd_ukhdR1qQ&oe=64C81291"),
                             ProductCard(
                                 "Nike Air Force",
                                 "20pcs + 8 colors + 12 Sizes",
                                 3600,
-                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/356653186_681387714004575_4246817800244333473_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=730e14&_nc_ohc=aoI4v-sr2rYAX-j-wRg&_nc_oc=AQkn5QpVb4Gbg_bZab1NYDjnPEZNaXPCyIO0lFT1eJADC-7WXFe12wXhL9QxHnHbnYwGRGV22kUX8oJ4d3RGPvI_&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDlm0M7EoagwRwrUaeMivcmWIBLxd2aF-rJ6Df_pWHYgg&oe=64B8B2C0"),
+                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/361088281_700518162091530_7746397129097762439_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHhvrAiGu6kcwwPOCeLDqA-Pq7IxF-Kz6Y-rsjEX4rPpjediUs4LqxvVdQKQRNSyE-Hn9hpI4gqnOLaH0H0JdSq&_nc_ohc=V-QpC2ac7U0AX8MZFcO&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDSrZEQuX646KGoVNYdgLbYDT1HD_K0difOd_ukhdR1qQ&oe=64C81291"),
                           ],
                         ),
                       )),
                   const SizedBox(
                     height: 10,
                   ),
-                 const Text("Menu",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
+                  Container(
+                    width: screen.size.width,
+                    height: 3,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade300.withOpacity(0.1)),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    "Latest sold",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                      width: screen.size.width,
+                      height: 280,
+                      child: const SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            ProductCard(
+                                "Nike Air Force",
+                                "20pcs + 8 colors + 12 Sizes",
+                                3600,
+                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/361088281_700518162091530_7746397129097762439_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHhvrAiGu6kcwwPOCeLDqA-Pq7IxF-Kz6Y-rsjEX4rPpjediUs4LqxvVdQKQRNSyE-Hn9hpI4gqnOLaH0H0JdSq&_nc_ohc=V-QpC2ac7U0AX8MZFcO&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDSrZEQuX646KGoVNYdgLbYDT1HD_K0difOd_ukhdR1qQ&oe=64C81291"),
+                            ProductCard(
+                                "Nike Air Force",
+                                "20pcs + 8 colors + 12 Sizes",
+                                3600,
+                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/361088281_700518162091530_7746397129097762439_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHhvrAiGu6kcwwPOCeLDqA-Pq7IxF-Kz6Y-rsjEX4rPpjediUs4LqxvVdQKQRNSyE-Hn9hpI4gqnOLaH0H0JdSq&_nc_ohc=V-QpC2ac7U0AX8MZFcO&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDSrZEQuX646KGoVNYdgLbYDT1HD_K0difOd_ukhdR1qQ&oe=64C81291"),
+                            ProductCard(
+                                "Nike Air Force",
+                                "20pcs + 8 colors + 12 Sizes",
+                                3600,
+                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/361088281_700518162091530_7746397129097762439_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHhvrAiGu6kcwwPOCeLDqA-Pq7IxF-Kz6Y-rsjEX4rPpjediUs4LqxvVdQKQRNSyE-Hn9hpI4gqnOLaH0H0JdSq&_nc_ohc=V-QpC2ac7U0AX8MZFcO&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDSrZEQuX646KGoVNYdgLbYDT1HD_K0difOd_ukhdR1qQ&oe=64C81291"),
+                            ProductCard(
+                                "Nike Air Force",
+                                "20pcs + 8 colors + 12 Sizes",
+                                3600,
+                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/361088281_700518162091530_7746397129097762439_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHhvrAiGu6kcwwPOCeLDqA-Pq7IxF-Kz6Y-rsjEX4rPpjediUs4LqxvVdQKQRNSyE-Hn9hpI4gqnOLaH0H0JdSq&_nc_ohc=V-QpC2ac7U0AX8MZFcO&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDSrZEQuX646KGoVNYdgLbYDT1HD_K0difOd_ukhdR1qQ&oe=64C81291"),
+                            ProductCard(
+                                "Nike Air Force",
+                                "20pcs + 8 colors + 12 Sizes",
+                                3600,
+                                "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/361088281_700518162091530_7746397129097762439_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHhvrAiGu6kcwwPOCeLDqA-Pq7IxF-Kz6Y-rsjEX4rPpjediUs4LqxvVdQKQRNSyE-Hn9hpI4gqnOLaH0H0JdSq&_nc_ohc=V-QpC2ac7U0AX8MZFcO&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDSrZEQuX646KGoVNYdgLbYDT1HD_K0difOd_ukhdR1qQ&oe=64C81291"),
+                          ],
+                        ),
+                      )),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: screen.size.width,
+                    height: 3,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade300.withOpacity(0.1)),
+                  ),
                 ],
               )),
-              
         ),
       ),
     );

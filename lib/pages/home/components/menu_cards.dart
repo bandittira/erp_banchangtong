@@ -13,6 +13,6 @@ class MenuCards extends StatefulWidget {
 class _MenuCardsState extends State<MenuCards> {
   @override
   Widget build(BuildContext context) {
-    return Row(children: [Text(widget.menuName),Text("data")],);
+    return Row(children: [Text(widget.menuName),const Text("data")],);
   }
 }

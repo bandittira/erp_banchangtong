@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:erp_banchangtong/pages/home/home.dart';
+import 'package:erp_banchangtong/pages/home/components/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -93,13 +93,14 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
           }
         } else if (a["message"] == "Login Success") {
           await prefs.setString('isLogged', "true");
+          await prefs.setString('Id', a['data'][0]['Id'].toString());
           await prefs.setString('Fname', a['data'][0]['Fname']);
           await prefs.setString('Lname', a['data'][0]['Lname']);
           await prefs.setString('Name', a['data'][0]['Name']);
           await prefs.setString(
               'PermissionId', a['data'][0]['PermissionId'].toString());
               print(prefs.getString('isLogged'));
-          Get.off(() => HomePage());
+          Get.off(() => const BottomNav());
         } else {
           print("Error");
         }
@@ -209,6 +210,7 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
               text: 'Log In',
               onPressed: () => {submit, _submitForm(username, password)},
             ),
+            //_submitForm(username, password)
             SizedBox(
               height: screenHeight * .15,
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class ProductCard extends StatefulWidget {
   final String productName;
@@ -45,7 +46,7 @@ class _ProductCardState extends State<ProductCard> {
           ),
           Container(
             padding: const EdgeInsets.only(left: 5, bottom: 6),
-            child: Text(
+            child: AutoSizeText(
               widget.productName,
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
@@ -55,13 +56,13 @@ class _ProductCardState extends State<ProductCard> {
           ),
           Container(
               padding: const EdgeInsets.only(left: 5, bottom: 6),
-              child: Text(
+              child: AutoSizeText(
                 widget.detail,
                 style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
               )),
           Container(
             padding: const EdgeInsets.only(left: 5),
-            child: Text(
+            child: AutoSizeText(
               widget.price.toString(),
               style: const TextStyle(
                   fontWeight: FontWeight.bold, color: Colors.black),

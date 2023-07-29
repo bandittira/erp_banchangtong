@@ -39,10 +39,18 @@ dependencies:
   get: ^4.6.5
   http: ^1.1.0
   shared_preferences: ^2.2.0
-  image_picker: ^1.0.0
+  image_picker: ^1.0.1
   fl_chart: ^0.63.0
   responsive_builder: ^0.7.0
   iconsax: ^0.0.8
+  qr_code_scanner: ^1.0.1
+  auto_size_text: ^3.0.0
+  persistent_bottom_nav_bar: ^5.0.2
+  dropdown_button2:
+  camera: ^0.10.5+2
+  path_provider: ^2.0.15
+  path: ^1.8.3
+  video_player: ^2.7.0
 
 dev_dependencies:
   flutter_test:
