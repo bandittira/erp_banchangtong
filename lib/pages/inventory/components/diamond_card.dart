@@ -47,9 +47,6 @@ final List<String> cut = [
 
 List amountDiamond = [];
 List caratDiamond = [];
-List selectedcolor = [];
-List selectedclarity = [];
-List selectedcut = [];
 
 class DiamondCard extends StatefulWidget {
   final int index;
@@ -66,8 +63,13 @@ class _DiamondCardState extends State<DiamondCard> {
     var screen = MediaQuery.of(context);
     return Column(
       children: [
+        Container(
+          width: screen.size.width,
+          height: 1,
+          color: Colors.grey.withOpacity(0.3),
+        ),
         Padding(
-          padding: const EdgeInsets.only(top: 0, bottom: 15),
+          padding: const EdgeInsets.only(top: 15, bottom: 15),
           child: Row(children: [
             Row(children: [
               Container(
@@ -138,7 +140,7 @@ class _DiamondCardState extends State<DiamondCard> {
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton2<String>(
                         isExpanded: true,
-                        hint: const Text("สี"),
+                        hint: const Text("น้ำ"),
                         items: diamondColor
                             .map((int item) => DropdownMenuItem<String>(
                                 value: item.toString(),
@@ -151,8 +153,15 @@ class _DiamondCardState extends State<DiamondCard> {
                                 : diamondColorArr[widget.index].toString(),
                         onChanged: (value) {
                           setState(() {
-                            if (diamondColorArr.isEmpty) {
+                            if (diamondColorArr.isEmpty && widget.index == 0) {
                               diamondColorArr.add(int.parse(value!));
+                            } else if (diamondColorArr.isEmpty &&
+                                widget.index > 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('โปรดกรอกข้อมูลด้านบนก่อน'),
+                                ),
+                              );
                             } else if (diamondColorArr.length - 1 <
                                 widget.index) {
                               diamondColorArr.add(int.parse(value!));
@@ -184,12 +193,33 @@ class _DiamondCardState extends State<DiamondCard> {
                         hint: const Text("ตำหนิ"),
                         items: clarity
                             .map((String item) => DropdownMenuItem<String>(
-                                value: item.toString(),
-                                child: Text(item.toString())))
+                                value: item, child: Text(item)))
                             .toList(),
-                        value: null,
+                        value: diamondClarity.isEmpty
+                            ? null
+                            : diamondClarity.length - 1 < widget.index
+                                ? null
+                                : diamondClarity[widget.index],
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            if (diamondClarity.isEmpty && widget.index == 0) {
+                              diamondClarity.add(value);
+                            } else if (diamondClarity.isEmpty &&
+                                widget.index > 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('โปรดกรอกข้อมูลด้านบนก่อน'),
+                                ),
+                              );
+                            } else if (diamondClarity.length - 1 <
+                                widget.index) {
+                              diamondClarity.add(value!);
+                            } else {
+                              diamondClarity[widget.index] = value!;
+                              print(widget.index);
+                              print(diamondClarity.length - 1);
+                            }
+                          });
                         },
                       ),
                     ),
@@ -209,15 +239,34 @@ class _DiamondCardState extends State<DiamondCard> {
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton2<String>(
                         isExpanded: true,
-                        hint: const Text("คัท"),
+                        hint: const Text("รูปทรง"),
                         items: cut
                             .map((String item) => DropdownMenuItem<String>(
-                                value: item.toString(),
-                                child: Text(item.toString())))
+                                value: item, child: Text(item)))
                             .toList(),
-                        value: null,
+                        value: diamondCut.isEmpty
+                            ? null
+                            : diamondCut.length - 1 < widget.index
+                                ? null
+                                : diamondCut[widget.index],
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            if (diamondCut.isEmpty && widget.index == 0) {
+                              diamondCut.add(value!);
+                            } else if (diamondCut.isEmpty && widget.index > 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('โปรดกรอกข้อมูลด้านบนก่อน'),
+                                ),
+                              );
+                            } else if (diamondCut.length - 1 < widget.index) {
+                              diamondCut.add(value!);
+                            } else {
+                              diamondCut[widget.index] = value!;
+                              print(widget.index);
+                              print(diamondCut.length - 1);
+                            }
+                          });
                         },
                       ),
                     ),

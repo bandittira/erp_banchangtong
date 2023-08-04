@@ -99,7 +99,7 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
           await prefs.setString('Name', a['data'][0]['Name']);
           await prefs.setString(
               'PermissionId', a['data'][0]['PermissionId'].toString());
-              print(prefs.getString('isLogged'));
+          print(prefs.getString('isLogged'));
           Get.off(() => const BottomNav());
         } else {
           print("Error");
@@ -151,7 +151,7 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
           children: [
             SizedBox(height: screenHeight * .12),
             const Text(
-              'Welcome,',
+              'BANCHANGTONG,',
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
@@ -191,18 +191,7 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
               obscureText: true,
               textInputAction: TextInputAction.next,
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'Forgot Password?',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
+
             SizedBox(
               height: screenHeight * .075,
             ),

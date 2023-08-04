@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:erp_banchangtong/pages/inventory/components/diamond_card.dart';
+import 'package:erp_banchangtong/pages/inventory/components/gemstone_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -63,11 +65,16 @@ String? selectedcolor;
 String? selectedclarity;
 String? selectedcut;
 
-List<int> diamondColorArr = [];
+List diamondColorArr = [];
+List diamondClarity = [];
+List diamondCut = [];
+List<Map<String, dynamic>> material = [];
+List<Map<String, dynamic>> diamondJson = [];
+List<Map<String, dynamic>> gemstoneJson = [];
 
 class _InsertProductState extends State<InsertProduct> {
   final _formKey = GlobalKey<FormState>();
-  String _price = "";
+  String price = "";
   String basePrice = "";
   String goldWeight = "";
   String goldPercent = "";
@@ -75,19 +82,21 @@ class _InsertProductState extends State<InsertProduct> {
   String amountD = "";
   String gemstone = "";
   String amountG = "";
-  final List<TextEditingController> _controllerDiamond = [];
+  final diamondcontroller = TextEditingController();
+  final amountDcontroller = TextEditingController();
+  final pricecontroller = TextEditingController();
+  final basePricecontroller = TextEditingController();
+  List<TextEditingController> _controllerDiamond = [];
   final List<TextEditingController> _controllerGemstone = [];
   final List<TextEditingController> _amountDiamond = [];
   final List<TextEditingController> _amountGemstone = [];
 
-  final List<Widget> _dynamicWidgetsDiamond = [];
-  final List<Widget> _dynamicWidgetsGemstone = [];
+  List<Widget> _dynamicWidgetsDiamond = [];
+  List<Widget> _dynamicWidgetsGemstone = [];
   final ImagePicker picker = ImagePicker();
   String id = "";
   File? image;
   var imageName = "ชื่อรูปภาพ";
-  var diamondArr = [];
-  var gemstoneArr = [];
 
   String? _validateInput(String? value) {
     if (value == null || value.isEmpty) {
@@ -113,7 +122,9 @@ class _InsertProductState extends State<InsertProduct> {
   Future<void> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var ids = prefs.getString('Id');
-    id = ids!;
+    setState(() {
+      id = ids!;
+    });
   }
 
   Future pickImage() async {
@@ -170,55 +181,30 @@ class _InsertProductState extends State<InsertProduct> {
       } else {
         if (detailArr == null) {
         } else {
-          if (detailArr.isEmpty) {
+          if (diamondColorArr.isEmpty) {
+          } else if (_dynamicWidgetsDiamond.length > diamondColorArr.length) {
           } else {
-            detailArr.removeAt(arr.length - 1);
+            diamondColorArr.removeAt(arr.length - 1);
+          }
+          if (diamondClarity.isEmpty) {
+          } else if (_dynamicWidgetsDiamond.length > diamondClarity.length) {
+          } else {
+            diamondClarity.removeAt(arr.length - 1);
+          }
+          if (diamondCut.isEmpty) {
+          } else if (_dynamicWidgetsDiamond.length > diamondCut.length) {
+          } else {
+            diamondCut.removeAt(arr.length - 1);
           }
         }
         arr.removeAt(arr.length - 1);
         controller.removeAt(controller.length - 1);
         amount.removeAt(amount.length - 1);
+        print(diamondColorArr);
+        print(diamondClarity);
+        print(diamondCut);
       }
     });
-  }
-
-  Future<void> uploadFormData({
-    required String productCategory,
-    required int createBy,
-    required String imagePath,
-    required int price,
-    required String basePrice,
-    required List<String> material,
-    required List<String> diamond,
-    required List<String> gemstone,
-    required http.MultipartFile file,
-  }) async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('127.0.0.1:8000/insertProduct'));
-
-    // Add form fields
-    request.fields['productCategory'] = productCategory;
-    request.fields['createBy'] = createBy.toString();
-    request.fields['price'] = price.toString();
-    request.fields['basePrice'] = basePrice;
-
-    // Add list fields
-    request.fields['material'] = material.join(',');
-    request.fields['diamond'] = diamond.join(',');
-    request.fields['gemstone'] = gemstone.join(',');
-
-    // Add the file
-    request.files.add(file);
-
-    // Send the request and get the response
-    var response = await request.send();
-
-    // Check if the request was successful
-    if (response.statusCode == 200) {
-      print('Upload successful');
-    } else {
-      print('Upload failed with status: ${response.statusCode}');
-    }
   }
 
   @override
@@ -230,6 +216,108 @@ class _InsertProductState extends State<InsertProduct> {
   Widget build(BuildContext context) {
     var screen = MediaQuery.of(context);
 
+    void clearValue() {
+      setState(() {
+        selectedclarity = null;
+        selectedcolor = null;
+        selectedcut = null;
+        _dynamicWidgetsDiamond = [];
+        _dynamicWidgetsGemstone = [];
+        diamond = "";
+        amountD = "";
+        diamondcontroller.text = "";
+        amountDcontroller.text = "";
+        pricecontroller.text = "";
+        basePricecontroller.text = "";
+        price = "";
+        basePrice = "";
+        imageName = "ชื่อรูปภาพ";
+        image = null;
+        _controllerDiamond = [];
+        diamondColorArr = [];
+        diamondClarity = [];
+        diamondCut = [];
+        amountGemstone = [];
+        caratGemstone = [];
+        material = [];
+        diamondJson = [];
+        gemstoneJson = [];
+        amountG = "";
+        gemstone = "";
+        amountDiamond = [];
+        caratDiamond = [];
+      });
+    }
+
+    Future<void> uploadFormData({
+      required String productCategory,
+      required String productCode,
+      required int createBy,
+      required String imagePath,
+      required int price,
+      required String basePrice,
+      required List<Map<String, dynamic>> material,
+      required List<Map<String, dynamic>> diamond,
+      required List<Map<String, dynamic>> gemstone,
+      required File file,
+    }) async {
+      //String url = 'http://10.0.2.2:8000/insertProduct';
+      String url =
+          'http://10.0.2.2:8000/insertProduct?productCategory=${productCategory}&productCode=${productCode}&createBy=${createBy}&imagePath=${imageName}&price=${price}&basePrice=${basePrice}';
+      Map<String, String> requestData = {
+        // 'productCategory': productCategory,
+        // 'createBy': createBy.toString(),
+        // 'imagePath': imagePath,
+        // 'price': price.toString(),
+        // 'basePrice': basePrice,
+        'material': jsonEncode(material),
+        'diamond': jsonEncode(diamond),
+        'gemstone': jsonEncode(gemstone),
+      };
+
+      try {
+        var request = http.MultipartRequest('POST', Uri.parse(url));
+
+        // Add form fields
+        requestData.forEach((key, value) {
+          request.fields[key] = value;
+        });
+
+        // Convert the image file to MultipartFile
+        List<int> imageBytes = await file.readAsBytes();
+        String fileName = file.path.split('/').last;
+        request.files.add(http.MultipartFile.fromBytes('file', imageBytes,
+            filename: fileName));
+
+        // Send the request and get the response
+        var response = await request.send();
+
+        if (response.statusCode == 200) {
+          // Request successful, handle the response
+          var responseData = await response.stream.bytesToString();
+          print('Response: ${json.decode(responseData)}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('ลงข้อมูลสำเร็จ'),
+            ),
+          );
+        } else {
+          // Request failed with an error status code
+          print(request.fields.values);
+          print('Request failed with status: ${response.statusCode}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('ลงข้อมูลไม่สำเร็จ โปรดลองใหม่'),
+            ),
+          );
+        }
+      } catch (e) {
+        // Error occurred during the request
+        print('Error: $e');
+      }
+    }
+
+    getUserId();
     return Scaffold(
         body: SingleChildScrollView(
       child: SafeArea(
@@ -363,9 +451,10 @@ class _InsertProductState extends State<InsertProduct> {
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.grey.shade200),
                             child: TextFormField(
+                                controller: pricecontroller,
                                 validator: _validateInput,
                                 onSaved: (value) {
-                                  _price = value!;
+                                  price = value!;
                                 },
                                 textInputAction: TextInputAction.go,
                                 keyboardType: TextInputType.number,
@@ -385,6 +474,7 @@ class _InsertProductState extends State<InsertProduct> {
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.grey.shade200),
                             child: TextFormField(
+                                controller: basePricecontroller,
                                 validator: _validateInput,
                                 onSaved: (value) {
                                   basePrice = value!;
@@ -419,6 +509,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   borderRadius: BorderRadius.circular(15),
                                   color: Colors.grey.shade200),
                               child: TextFormField(
+                                  controller: amountDcontroller,
                                   onSaved: (value) {
                                     amountD = value!;
                                   },
@@ -440,6 +531,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   borderRadius: BorderRadius.circular(15),
                                   color: Colors.grey.shade200),
                               child: TextFormField(
+                                  controller: diamondcontroller,
                                   onSaved: (value) {
                                     diamond = value!;
                                   },
@@ -486,7 +578,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton2<String>(
                                       isExpanded: true,
-                                      hint: const Text("สี"),
+                                      hint: const Text("น้ำ"),
                                       items: diamondColor
                                           .map((int item) =>
                                               DropdownMenuItem<String>(
@@ -548,7 +640,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton2<String>(
                                       isExpanded: true,
-                                      hint: const Text("คัท"),
+                                      hint: const Text("รูปทรง"),
                                       items: cut
                                           .map((String item) =>
                                               DropdownMenuItem<String>(
@@ -647,7 +739,12 @@ class _InsertProductState extends State<InsertProduct> {
                         ),
                       ),
                       Column(
-                        children: _dynamicWidgetsGemstone,
+                        children: [
+                          for (var i = 0;
+                              i < _dynamicWidgetsGemstone.length;
+                              i++)
+                            GemstoneCard(i)
+                        ],
                       ),
                       const SizedBox(
                         height: 15,
@@ -716,9 +813,7 @@ class _InsertProductState extends State<InsertProduct> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                    width:
-                                        10), // Add some spacing between the TextFormField and the Text widget
+                                const SizedBox(width: 10),
                                 Text(
                                   "กรัม",
                                   style: TextStyle(
@@ -790,7 +885,31 @@ class _InsertProductState extends State<InsertProduct> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                              onPressed: () => {},
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        content: const SingleChildScrollView(
+                                          child: Text(
+                                              "ต้องการลบข้อมูลใช่หรือไม่ ?"),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () =>
+                                                  {Navigator.of(context).pop()},
+                                              child: const Text("ยกเลิก")),
+                                          TextButton(
+                                              onPressed: () => {
+                                                    clearValue(),
+                                                    Navigator.of(context).pop()
+                                                  },
+                                              child: const Text("ลบ"))
+                                        ],
+                                        title: const Text("ลบข้อมูล"),
+                                      );
+                                    });
+                              },
                               child: Container(
                                 alignment: Alignment.center,
                                 width: 120,
@@ -799,15 +918,16 @@ class _InsertProductState extends State<InsertProduct> {
                                     borderRadius: BorderRadius.circular(15),
                                     color: Colors.red.shade400),
                                 child: const Text(
-                                  "Cancel",
+                                  "เคลีย",
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               )),
                           TextButton(
                               onPressed: () => {
                                     //productCategory : str, createBy : int, imagePath : str, price : int, basePrice : str, material : list, diamond : list, gemstone : list, file: UploadFile
-                                    getUserId(),
                                     if (_formKey.currentState!.validate())
                                       {
                                         _formKey.currentState!.save(),
@@ -842,113 +962,92 @@ class _InsertProductState extends State<InsertProduct> {
                                           }
                                         else
                                           {
-                                            print('price: $_price'),
-                                            print(selectedValue),
-                                            print(image),
-                                            print(diamondColorArr),
-                                            print(amountDiamond),
+                                            setState(() {
+                                              caratDiamond.add(diamond);
+                                              amountDiamond.add(amountD);
+                                              amountGemstone.add(amountG);
+                                              caratGemstone.add(gemstone);
+                                              if (selectedcolor == null) {
+                                              } else {
+                                                diamondColorArr.add(
+                                                    int.parse(selectedcolor!));
+                                              }
+                                              if (selectedclarity == null) {
+                                              } else {
+                                                diamondClarity
+                                                    .add(selectedclarity);
+                                              }
+                                              if (selectedcut == null) {
+                                              } else {
+                                                diamondCut.add(selectedcut);
+                                              }
+                                              print(diamondColorArr);
+
+                                              Map<String, dynamic> materialMap =
+                                                  {
+                                                'MaterialType':
+                                                    selectedValueGold,
+                                                'MaterialWeight': goldWeight,
+                                                'MaterialPercent': goldPercent,
+                                              };
+                                              material.add(materialMap);
+
+                                              for (var i = 0;
+                                                  i < amountDiamond.length;
+                                                  i++) {
+                                                print(caratDiamond);
+                                                if (diamond.isEmpty) {
+                                                } else {
+                                                  Map<String, dynamic>
+                                                      diamondMap = {
+                                                    'Carat': caratDiamond[i],
+                                                    "Color": diamondColorArr[i],
+                                                    "Cut": diamondCut[i],
+                                                    "Clarity":
+                                                        diamondClarity[i],
+                                                    "Certificated": "None",
+                                                    "Amount": int.parse(
+                                                        amountDiamond[i]),
+                                                  };
+                                                  diamondJson.add(diamondMap);
+                                                }
+                                              }
+
+                                              for (var x = 0;
+                                                  x < amountGemstone.length;
+                                                  x++) {
+                                                if (caratGemstone[x].length ==
+                                                    0) {
+                                                } else {
+                                                  Map<String, dynamic>
+                                                      gemstoneMap = {
+                                                    "Carat": double.parse(
+                                                        caratGemstone[x]),
+                                                    "Amount": int.parse(
+                                                        amountGemstone[x]),
+                                                  };
+                                                  gemstoneJson.add(gemstoneMap);
+                                                }
+                                              }
+                                              uploadFormData(
+                                                  productCategory:
+                                                      selectedValue.toString(),
+                                                  productCode: category[items
+                                                          .indexOf(selectedValue
+                                                              .toString())]
+                                                      .toString(),
+                                                  createBy: int.parse(id),
+                                                  imagePath: imageName,
+                                                  price: int.parse(price),
+                                                  basePrice: basePrice,
+                                                  material: material,
+                                                  diamond: diamondJson,
+                                                  gemstone: gemstoneJson,
+                                                  file: image!);
+                                              clearValue();
+                                            })
                                           },
                                       }
-                                    // if (_Diamond.text.isEmpty)
-                                    //   {print("yeh")}
-                                    // else
-                                    //   {
-                                    //     diamondArr.add({
-                                    //       "Carat": _Diamond.text,
-                                    //       "Shape": "",
-                                    //       "Color": "",
-                                    //       "Cut": "",
-                                    //       "Clarity": "",
-                                    //       "Certificated": "",
-                                    //       "Amount": double.parse(_amountD.text)
-                                    //     }),
-                                    //     if (_controllerDiamond.isEmpty)
-                                    //       {print("yeh")}
-                                    //     else
-                                    //       {
-                                    //         for (var i = 0;
-                                    //             i < _controllerDiamond.length;
-                                    //             i++)
-                                    //           {
-                                    //             gemstoneArr.add({
-                                    //               "Carat": _controllerDiamond[i]
-                                    //                   .text,
-                                    //               "Shape": "",
-                                    //               "Color": "",
-                                    //               "Cut": "",
-                                    //               "Clarity": "",
-                                    //               "Certificated": "",
-                                    //               "Amount": double.parse(
-                                    //                   _amountDiamond[i].text)
-                                    //             }),
-                                    //           },
-                                    //       }
-                                    //   },
-                                    // if (_Gemstone.text.isEmpty)
-                                    //   {print("Yeh")}
-                                    // else
-                                    //   {
-                                    //     gemstoneArr.add({
-                                    //       "Carat": _Gemstone.text,
-                                    //       "Shape": "",
-                                    //       "Color": "",
-                                    //       "Price": "",
-                                    //       "Amount": double.parse(_amountG.text)
-                                    //     }),
-                                    //     if (_controllerGemstone.isEmpty)
-                                    //       {print("Yeh")}
-                                    //     else
-                                    //       {
-                                    //         for (var i = 0;
-                                    //             i < _controllerGemstone.length;
-                                    //             i++)
-                                    //           {
-                                    //             gemstoneArr.add({
-                                    //               "Carat":
-                                    //                   _controllerGemstone[i]
-                                    //                       .text,
-                                    //               "Shape": "",
-                                    //               "Color": "",
-                                    //               "Price": "",
-                                    //               "Amount": double.parse(
-                                    //                   _amountGemstone[i].text)
-                                    //             }),
-                                    //           },
-                                    //       }
-                                    //   },
-                                    // print(diamondArr),
-                                    // print(gemstoneArr),
-
-                                    //uploadFormData(productCategory: category[items.indexOf(selectedValue.toString())], createBy: int.parse(id), imagePath: imageName, price: int.parse(_price.text), basePrice: _basePrice.text, material: material, diamond: diamond, gemstone: gemstone, file: file)
-                                    // print(category[
-                                    //     items.indexOf(selectedValue.toString())]),
-                                    // getUserId(),
-                                    // print(imageName),
-                                    // print(_price.text),
-                                    // print(_basePrice.text),
-                                    // print(_Diamond.text),
-                                    // print(_amountD.text),
-                                    // print(_Gemstone.text),
-                                    // print(_amountG.text),
-                                    // for (var i = 0;
-                                    //     i < _controllerDiamond.length;
-                                    //     i++)
-                                    //   {
-                                    //     print(_controllerDiamond[i].text),
-                                    //     print(_amountDiamond[i].text)
-                                    //   },
-
-                                    // for (var x = 0;
-                                    //     x < _controllerGemstone.length;
-                                    //     x++)
-                                    //   {
-                                    //     print(_controllerGemstone[x].text),
-                                    //     print(_amountGemstone[x].text)
-                                    //   },
-                                    // print(selectedValueGold),
-                                    // print(_goldWeight.text),
-                                    // print(_goldPercent.text),
-                                    // print(image),
                                   },
                               child: Container(
                                 alignment: Alignment.center,
@@ -958,9 +1057,11 @@ class _InsertProductState extends State<InsertProduct> {
                                     borderRadius: BorderRadius.circular(15),
                                     color: Colors.green.shade400),
                                 child: const Text(
-                                  "Submit",
+                                  "ยืนยัน",
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               )),
                         ],
