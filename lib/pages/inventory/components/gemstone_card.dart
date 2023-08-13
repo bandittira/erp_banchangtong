@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 List amountGemstone = [];
 List caratGemstone = [];
@@ -14,8 +15,6 @@ class GemstoneCard extends StatefulWidget {
 class _GemstoneCardState extends State<GemstoneCard> {
   @override
   Widget build(BuildContext context) {
-    print(widget.index);
-    var screen = MediaQuery.of(context);
     return Padding(
       padding: const EdgeInsets.only(top: 0, bottom: 15),
       child: Row(
@@ -23,7 +22,7 @@ class _GemstoneCardState extends State<GemstoneCard> {
           Container(
             padding: const EdgeInsets.only(left: 13),
             alignment: Alignment.center,
-            width: screen.size.width / 3.0,
+            width: Get.width / 3.0,
             height: 60,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
@@ -49,7 +48,7 @@ class _GemstoneCardState extends State<GemstoneCard> {
           Container(
             padding: const EdgeInsets.only(left: 13),
             alignment: Alignment.center,
-            width: screen.size.width / 3.0,
+            width: Get.width / 3.0,
             height: 60,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),

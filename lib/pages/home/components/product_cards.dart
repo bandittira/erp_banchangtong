@@ -1,5 +1,10 @@
+import 'package:erp_banchangtong/pages/inventory/adjust_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:get/get.dart';
+
+import '../../inventory/components/adjust_body.dart';
+import '../../inventory/controller/var.dart' as vars;
 
 class ProductCard extends StatefulWidget {
   final String productName;
@@ -13,10 +18,17 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
+  void getAdjustPage() {
+    productCode.value = widget.productName.substring(0, 2);
+    productId.value = int.parse(widget.productName.substring(2, 9));
+    selectedValue.value = vars.items[vars.category.indexOf(productCode.value)];
+    Get.to(() => const AdjustDetail());
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => {},
+      onPressed: () => {getAdjustPage()},
       child: Container(
         padding: const EdgeInsets.all(8),
         width: 180,

@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'controller/var.dart';
 
 late List<CameraDescription> cameras;
 
@@ -18,59 +19,6 @@ class InsertProduct extends StatefulWidget {
   @override
   State<InsertProduct> createState() => _InsertProductState();
 }
-
-final List<String> items = [
-  'แหวน',
-  'สร้อยคอ',
-  'สร้อยข้อมือ',
-  'กำไลข้อมือ',
-  'จี้',
-  'ต่างหู',
-  'กรอบพระ',
-  'หัวจรวจ',
-];
-
-final List<String> category = [
-  'RD',
-  'NK',
-  'BL',
-  'BG',
-  'PD',
-  'ER',
-  'BDRK',
-  'HJ',
-];
-
-final List<String> goldType = [
-  'ทอง',
-  'ทองคำขาว',
-  'พิงค์โกล',
-  'เงิน',
-  'แสตนเลส'
-];
-
-final List<String> certificated = [
-  "None",
-  "GIA",
-  "IGI",
-  "GCI",
-  "AGS",
-  "EGL",
-  "GCAL",
-];
-
-String? selectedValue;
-String? selectedValueGold;
-String? selectedcolor;
-String? selectedclarity;
-String? selectedcut;
-
-List diamondColorArr = [];
-List diamondClarity = [];
-List diamondCut = [];
-List<Map<String, dynamic>> material = [];
-List<Map<String, dynamic>> diamondJson = [];
-List<Map<String, dynamic>> gemstoneJson = [];
 
 class _InsertProductState extends State<InsertProduct> {
   final _formKey = GlobalKey<FormState>();
@@ -456,7 +404,7 @@ class _InsertProductState extends State<InsertProduct> {
                                 onSaved: (value) {
                                   price = value!;
                                 },
-                                textInputAction: TextInputAction.go,
+                                textInputAction: TextInputAction.next,
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
                                     hintText: "ราคา",
@@ -479,7 +427,7 @@ class _InsertProductState extends State<InsertProduct> {
                                 onSaved: (value) {
                                   basePrice = value!;
                                 },
-                                textInputAction: TextInputAction.go,
+                                textInputAction: TextInputAction.next,
                                 textCapitalization:
                                     TextCapitalization.characters,
                                 decoration: const InputDecoration(
@@ -513,7 +461,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   onSaved: (value) {
                                     amountD = value!;
                                   },
-                                  textInputAction: TextInputAction.go,
+                                  textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
                                       hintText: "จำนวนเพชร",
@@ -535,7 +483,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   onSaved: (value) {
                                     diamond = value!;
                                   },
-                                  textInputAction: TextInputAction.go,
+                                  textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
                                       hintText: "กะรัต / เม็ด",
@@ -591,6 +539,18 @@ class _InsertProductState extends State<InsertProduct> {
                                           selectedcolor = value;
                                         });
                                       },
+                                      dropdownStyleData: DropdownStyleData(
+                                          maxHeight: 250,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14)),
+                                          scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness:
+                                                  MaterialStateProperty.all(6),
+                                              thumbVisibility:
+                                                  MaterialStateProperty.all(
+                                                      true))),
                                     ),
                                   ),
                                 )),
@@ -622,6 +582,18 @@ class _InsertProductState extends State<InsertProduct> {
                                           selectedclarity = value;
                                         });
                                       },
+                                      dropdownStyleData: DropdownStyleData(
+                                          maxHeight: 250,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14)),
+                                          scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness:
+                                                  MaterialStateProperty.all(6),
+                                              thumbVisibility:
+                                                  MaterialStateProperty.all(
+                                                      true))),
                                     ),
                                   ),
                                 )),
@@ -653,6 +625,18 @@ class _InsertProductState extends State<InsertProduct> {
                                           selectedcut = value;
                                         });
                                       },
+                                      dropdownStyleData: DropdownStyleData(
+                                          maxHeight: 250,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14)),
+                                          scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness:
+                                                  MaterialStateProperty.all(6),
+                                              thumbVisibility:
+                                                  MaterialStateProperty.all(
+                                                      true))),
                                     ),
                                   ),
                                 )),
@@ -689,7 +673,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   onSaved: (value) {
                                     amountG = value!;
                                   },
-                                  textInputAction: TextInputAction.go,
+                                  textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
                                       hintText: "จำนวนพลอย",
@@ -710,7 +694,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   onSaved: (value) {
                                     gemstone = value!;
                                   },
-                                  textInputAction: TextInputAction.go,
+                                  textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
                                       hintText: "กะรัต / เม็ด",
@@ -805,7 +789,7 @@ class _InsertProductState extends State<InsertProduct> {
                                     onSaved: (value) {
                                       goldWeight = value!;
                                     },
-                                    textInputAction: TextInputAction.go,
+                                    textInputAction: TextInputAction.next,
                                     keyboardType: TextInputType.number,
                                     decoration: const InputDecoration(
                                       hintText: "น้ำหนัก",
@@ -845,7 +829,7 @@ class _InsertProductState extends State<InsertProduct> {
                                     onSaved: (value) {
                                       goldPercent = value!;
                                     },
-                                    textInputAction: TextInputAction.go,
+                                    textInputAction: TextInputAction.next,
                                     keyboardType: TextInputType.number,
                                     decoration: const InputDecoration(
                                       hintText: "เปอร์เซ็นโลหะ",
@@ -1099,7 +1083,7 @@ addElements(
                     color: Colors.grey.shade200),
                 child: TextField(
                     controller: controller,
-                    textInputAction: TextInputAction.go,
+                    textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         hintText: amount, border: InputBorder.none)),
@@ -1117,7 +1101,7 @@ addElements(
                     color: Colors.grey.shade200),
                 child: TextField(
                     controller: controlleramount,
-                    textInputAction: TextInputAction.go,
+                    textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         hintText: carat, border: InputBorder.none)),

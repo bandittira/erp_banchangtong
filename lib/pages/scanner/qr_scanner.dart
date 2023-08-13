@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:erp_banchangtong/pages/inventory/adjust_detail.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRViewExample extends StatefulWidget {
@@ -29,21 +31,37 @@ class _QRViewExampleState extends State<QRViewExample> {
 
   @override
   Widget build(BuildContext context) {
+    var screen = MediaQuery.of(context);
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(flex: 4, child: _buildQrView(context)),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: (result != null)
-                  ? Text(
-                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  : const Text('Scan a code'),
+      body: Stack(children: [
+        Column(
+          children: <Widget>[
+            Expanded(flex: 4, child: _buildQrView(context)),
+          ],
+        ),
+        SizedBox(
+          width: screen.size.width,
+          height: screen.size.height / 2,
+          child: Container(
+            margin: const EdgeInsets.only(
+                top: 180, bottom: 180, right: 80, left: 80),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25), color: Colors.white),
+            child: TextButton(
+              onPressed: () => {
+                result != null
+                    ? Get.to(const AdjustDetail())
+                    : Get.snackbar('ไม่สามารถแสกนได้', 'โปรดแสกนใหม่อีกครั้ง')
+              },
+              child: Center(
+                child: (result != null)
+                    ? Text('Data: ${result!.code}')
+                    : const Text('โปรดแสกน QR Code'),
+              ),
             ),
-          )
-        ],
-      ),
+          ),
+        ),
+      ]),
     );
   }
 

@@ -1,12 +1,7 @@
-import 'dart:io';
-
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class ImagePreview extends StatefulWidget {
-  const ImagePreview(this.file, {super.key});
-  final XFile file;
-
   @override
   State<ImagePreview> createState() => _ImagePreviewState();
 }
@@ -14,11 +9,14 @@ class ImagePreview extends StatefulWidget {
 class _ImagePreviewState extends State<ImagePreview> {
   @override
   Widget build(BuildContext context) {
-    File picture = File(widget.file.path);
     return Scaffold(
       appBar: AppBar(title: const Text("Image Preview")),
       body: Center(
-        child: Image.file(picture),
+        child: QrImageView(
+          data: 'RD1000002',
+          version: QrVersions.auto,
+          size: 200.0,
+        ),
       ),
     );
   }

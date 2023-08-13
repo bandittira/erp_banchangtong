@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 
-class AdjustDetail extends StatefulWidget {
-  const AdjustDetail({super.key});
+import 'components/adjust_body.dart';
 
-  @override
-  State<AdjustDetail> createState() => _AdjustDetailState();
-}
+class AdjustDetail extends StatelessWidget {
+  const AdjustDetail();
 
-class _AdjustDetailState extends State<AdjustDetail> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("Adjust Detail Screen"),);
+    var screen = MediaQuery.of(context);
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: SafeArea(
+            child: Container(
+          width: screen.size.width,
+          padding: const EdgeInsets.all(20),
+          child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [WidgetBody()]),
+        )),
+      ),
+    );
   }
 }

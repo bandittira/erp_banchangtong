@@ -12,14 +12,6 @@ Future<void> main() async {
   runApp(MyApp(cameras: cameras));
 }
 
-class CounterController extends GetxController {
-  var count = 0.obs;
-
-  void increment() {
-    count.value++;
-  }
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({required this.cameras, Key? key}) : super(key: key);
   final List<CameraDescription> cameras;

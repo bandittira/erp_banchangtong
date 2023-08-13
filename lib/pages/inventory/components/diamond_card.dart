@@ -1,52 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-
-import '../insert_product.dart';
-
-final List<int> diamondColor = [
-  100,
-  99,
-  98,
-  97,
-  96,
-  95,
-  94,
-  93,
-  92,
-  91,
-  90,
-];
-
-final List<String> clarity = [
-  "FL",
-  "VVS1",
-  "VVS2",
-  "VS1",
-  "VS2",
-  "SI1",
-  "SI2",
-  "I1",
-  "I2",
-  "I3"
-];
-
-final List<String> cut = [
-  "Round",
-  "Heart",
-  "Emerald",
-  "Baguette",
-  "Cushion",
-  "Radiant",
-  "Princess",
-  "Asscher",
-  "Trilliant",
-  "Oval",
-  "Pear",
-  "Marquise"
-];
-
-List amountDiamond = [];
-List caratDiamond = [];
+import '../controller/var.dart';
 
 class DiamondCard extends StatefulWidget {
   final int index;
@@ -167,11 +121,18 @@ class _DiamondCardState extends State<DiamondCard> {
                               diamondColorArr.add(int.parse(value!));
                             } else {
                               diamondColorArr[widget.index] = int.parse(value!);
-                              print(widget.index);
-                              print(diamondColorArr.length - 1);
                             }
                           });
                         },
+                        dropdownStyleData: DropdownStyleData(
+                            maxHeight: 250,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14)),
+                            scrollbarTheme: ScrollbarThemeData(
+                                radius: const Radius.circular(40),
+                                thickness: MaterialStateProperty.all(6),
+                                thumbVisibility:
+                                    MaterialStateProperty.all(true))),
                       ),
                     ),
                   )),
@@ -221,6 +182,15 @@ class _DiamondCardState extends State<DiamondCard> {
                             }
                           });
                         },
+                        dropdownStyleData: DropdownStyleData(
+                            maxHeight: 250,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14)),
+                            scrollbarTheme: ScrollbarThemeData(
+                                radius: const Radius.circular(40),
+                                thickness: MaterialStateProperty.all(6),
+                                thumbVisibility:
+                                    MaterialStateProperty.all(true))),
                       ),
                     ),
                   )),
@@ -268,6 +238,15 @@ class _DiamondCardState extends State<DiamondCard> {
                             }
                           });
                         },
+                        dropdownStyleData: DropdownStyleData(
+                            maxHeight: 250,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14)),
+                            scrollbarTheme: ScrollbarThemeData(
+                                radius: const Radius.circular(40),
+                                thickness: MaterialStateProperty.all(6),
+                                thumbVisibility:
+                                    MaterialStateProperty.all(true))),
                       ),
                     ),
                   )),
