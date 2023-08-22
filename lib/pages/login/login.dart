@@ -83,7 +83,7 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         var a = json.decode(response.body);
         print(a["message"]);
-        if (a["message"] == "Username or Password does not match") {
+        if (a["message"] == "Username or Password does not match" || a["message"] == "Login Fail") {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(

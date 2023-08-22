@@ -1,4 +1,5 @@
 import 'package:erp_banchangtong/pages/inventory/adjust_detail.dart';
+import 'package:erp_banchangtong/pages/inventory/controller/get_product_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
@@ -11,24 +12,31 @@ class ProductCard extends StatefulWidget {
   final String detail;
   final int price;
   final String imagePath;
-  const ProductCard(this.productName, this.detail, this.price, this.imagePath);
+  final String pageType;
+  const ProductCard(
+      this.productName, this.detail, this.price, this.imagePath, this.pageType);
 
   @override
   State<ProductCard> createState() => _ProductCardState();
 }
 
 class _ProductCardState extends State<ProductCard> {
-  void getAdjustPage() {
-    productCode.value = widget.productName.substring(0, 2);
-    productId.value = int.parse(widget.productName.substring(2, 9));
-    selectedValue.value = vars.items[vars.category.indexOf(productCode.value)];
-    Get.to(() => const AdjustDetail());
+  void getAdjustPage(String page) {
+    if (page == "latest_add") {
+      productCode.value = widget.productName.substring(0, 2);
+      productId.value = int.parse(widget.productName.substring(2, 9));
+      selectedValue.value =
+          vars.items[vars.category.indexOf(productCode.value)];
+      GetProductDetailsById()
+          .getAllProduct(productId.toString(), productCode.toString());
+      Get.to(() => const AdjustDetail());
+    } else if (page == "latest_sole") {}
   }
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => {getAdjustPage()},
+      onPressed: () => {getAdjustPage(widget.pageType)},
       child: Container(
         padding: const EdgeInsets.all(8),
         width: 180,

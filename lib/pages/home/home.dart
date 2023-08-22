@@ -1,9 +1,9 @@
 import 'package:erp_banchangtong/pages/home/components/product_cards.dart';
 import 'package:erp_banchangtong/pages/home/controller/var.dart';
+import 'package:erp_banchangtong/pages/inventory/controller/get_product_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:searchfield/searchfield.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:iconsax/iconsax.dart';
 import '../inventory/adjust_detail.dart';
 import '../inventory/components/adjust_body.dart';
@@ -22,17 +22,6 @@ class HomePage extends StatelessWidget {
     GetProductDetails getProductDetails = GetProductDetails();
     getProductDetails.getProductDetails();
     getProductDetails.getAllProduct();
-
-    // ignore: unused_element
-    Future<void> removeSharedPreferences() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('isLogged', 'false');
-      prefs.remove('Id');
-      prefs.remove('Fname');
-      prefs.remove('Lname');
-      prefs.remove('PermissionId');
-    }
-
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -86,8 +75,14 @@ class HomePage extends StatelessWidget {
                                       selectedValue.value = vars.items[vars
                                           .category
                                           .indexOf(productCode.value)],
+                                      GetProductDetailsById().getAllProduct(
+                                          productId.toString(),
+                                          productCode.toString()),
                                       Get.to(() => const AdjustDetail())
                                     },
+                                    suggestionsDecoration: SuggestionDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
                                     searchInputDecoration:
                                         const InputDecoration(
                                             prefixIcon:
@@ -103,19 +98,13 @@ class HomePage extends StatelessWidget {
                                             item: e,
                                             // Use child to show Custom Widgets in the suggestions
                                             // defaults to Text widget
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20)),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  children: [
-                                                    Text(e.toString()),
-                                                  ],
-                                                ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                children: [
+                                                  Text(e.toString()),
+                                                ],
                                               ),
                                             ),
                                           ),
@@ -167,7 +156,10 @@ class HomePage extends StatelessWidget {
                                           '${productsArr[x]['ProductCode']}${productsArr[x]['ProductId']}',
                                           '${productsArr[x]['BasePrice']}',
                                           productsArr[x]['Price'],
-                                          "https://scontent.fbkk12-1.fna.fbcdn.net/v/t39.30808-6/363812463_711734630969883_6541867963504109327_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=7f8c78&_nc_eui2=AeGcgKBvBSBFZNBIHMJ7rFoz-p5-Tl6R31b6nn5OXpHfVuxl0wNDHAt_MHQy_VL-Lk_12WApmsfXfWBgYe8KMJyb&_nc_ohc=UU4emcxBaVoAX_crK9d&_nc_ht=scontent.fbkk12-1.fna&oh=00_AfCHO5T_0gZlF2TV2O902et9v5Efi8oGMshqQAm0eMAqmw&oe=64DCBF61"),
+                                          productsArr[x]['ImagePath'] == null
+                                              ? 'https://banchangtong.obs.ap-southeast-2.myhuaweicloud.com/_DSC3937.png'
+                                              : '${productsArr[x]['ImagePath']}',
+                                          "latest_add"),
                                   ],
                                 ),
                               )),
@@ -194,35 +186,17 @@ class HomePage extends StatelessWidget {
                           SizedBox(
                               width: Get.width,
                               height: 280,
-                              child: const SingleChildScrollView(
+                              child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
-                                    ProductCard(
-                                        "Nike Air Force",
-                                        "20pcs + 8 colors + 12 Sizes",
-                                        3600,
-                                        "https://scontent.fbkk12-1.fna.fbcdn.net/v/t39.30808-6/363812463_711734630969883_6541867963504109327_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=7f8c78&_nc_eui2=AeGcgKBvBSBFZNBIHMJ7rFoz-p5-Tl6R31b6nn5OXpHfVuxl0wNDHAt_MHQy_VL-Lk_12WApmsfXfWBgYe8KMJyb&_nc_ohc=UU4emcxBaVoAX_crK9d&_nc_ht=scontent.fbkk12-1.fna&oh=00_AfCHO5T_0gZlF2TV2O902et9v5Efi8oGMshqQAm0eMAqmw&oe=64DCBF61"),
-                                    ProductCard(
-                                        "Nike Air Force",
-                                        "20pcs + 8 colors + 12 Sizes",
-                                        3600,
-                                        "https://scontent.fbkk12-1.fna.fbcdn.net/v/t39.30808-6/363812463_711734630969883_6541867963504109327_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=7f8c78&_nc_eui2=AeGcgKBvBSBFZNBIHMJ7rFoz-p5-Tl6R31b6nn5OXpHfVuxl0wNDHAt_MHQy_VL-Lk_12WApmsfXfWBgYe8KMJyb&_nc_ohc=UU4emcxBaVoAX_crK9d&_nc_ht=scontent.fbkk12-1.fna&oh=00_AfCHO5T_0gZlF2TV2O902et9v5Efi8oGMshqQAm0eMAqmw&oe=64DCBF61"),
-                                    ProductCard(
-                                        "Nike Air Force",
-                                        "20pcs + 8 colors + 12 Sizes",
-                                        3600,
-                                        "https://scontent.fbkk12-1.fna.fbcdn.net/v/t39.30808-6/363812463_711734630969883_6541867963504109327_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=7f8c78&_nc_eui2=AeGcgKBvBSBFZNBIHMJ7rFoz-p5-Tl6R31b6nn5OXpHfVuxl0wNDHAt_MHQy_VL-Lk_12WApmsfXfWBgYe8KMJyb&_nc_ohc=UU4emcxBaVoAX_crK9d&_nc_ht=scontent.fbkk12-1.fna&oh=00_AfCHO5T_0gZlF2TV2O902et9v5Efi8oGMshqQAm0eMAqmw&oe=64DCBF61"),
-                                    ProductCard(
-                                        "Nike Air Force",
-                                        "20pcs + 8 colors + 12 Sizes",
-                                        3600,
-                                        "https://scontent.fbkk12-1.fna.fbcdn.net/v/t39.30808-6/363812463_711734630969883_6541867963504109327_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=7f8c78&_nc_eui2=AeGcgKBvBSBFZNBIHMJ7rFoz-p5-Tl6R31b6nn5OXpHfVuxl0wNDHAt_MHQy_VL-Lk_12WApmsfXfWBgYe8KMJyb&_nc_ohc=UU4emcxBaVoAX_crK9d&_nc_ht=scontent.fbkk12-1.fna&oh=00_AfCHO5T_0gZlF2TV2O902et9v5Efi8oGMshqQAm0eMAqmw&oe=64DCBF61"),
-                                    ProductCard(
-                                        "Nike Air Force",
-                                        "20pcs + 8 colors + 12 Sizes",
-                                        3600,
-                                        "https://scontent.fbkk12-1.fna.fbcdn.net/v/t39.30808-6/363812463_711734630969883_6541867963504109327_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=7f8c78&_nc_eui2=AeGcgKBvBSBFZNBIHMJ7rFoz-p5-Tl6R31b6nn5OXpHfVuxl0wNDHAt_MHQy_VL-Lk_12WApmsfXfWBgYe8KMJyb&_nc_ohc=UU4emcxBaVoAX_crK9d&_nc_ht=scontent.fbkk12-1.fna&oh=00_AfCHO5T_0gZlF2TV2O902et9v5Efi8oGMshqQAm0eMAqmw&oe=64DCBF61"),
+                                    for (var x = 0; x < 5; x++)
+                                      const ProductCard(
+                                          "Nike Air Force",
+                                          "20pcs + 8 colors + 12 Sizes",
+                                          3600,
+                                          "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/367472032_732655418877804_742305069239873215_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeErAT1V3XxeU2TWVAzxCmZ_v-RngpIocyi_5GeCkihzKHdvC3cPl9T6WSQ6CnNisY-jxWs1vpvNJaDi8WQuPMfm&_nc_ohc=Im3y9SBk6ccAX8XdwhJ&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDG5yOMg5rO37LeZedm71TXOHwrCpayGyy5hzG53l7UPw&oe=64E8322C",
+                                          "latest_sold"),
                                   ],
                                 ),
                               )),

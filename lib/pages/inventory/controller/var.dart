@@ -1,5 +1,7 @@
 // Insert Variables
 
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+
 final List<String> items = [
   'แหวน',
   'สร้อยคอ',
@@ -18,7 +20,7 @@ final List<String> category = [
   'BG',
   'PD',
   'ER',
-  'BDRK',
+  'RK',
   'HJ',
 ];
 
@@ -41,7 +43,9 @@ final List<String> certificated = [
 ];
 
 // Diamond Cards
-String? selectedValue;
+RxString? selectedValue = items[0].obs;
+RxString productCode = "RD".obs;
+RxInt productId = 1000001.obs;
 String? selectedValueGold;
 String? selectedcolor;
 String? selectedclarity;

@@ -1,17 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:camera/camera.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:erp_banchangtong/pages/home/controller/var.dart';
 import 'package:erp_banchangtong/pages/inventory/components/diamond_card.dart';
 import 'package:erp_banchangtong/pages/inventory/components/gemstone_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import '../home/controller/get_product.dart';
+import 'controller/get_id.dart';
+import 'controller/var.dart' as vars;
 import 'controller/var.dart';
-
-late List<CameraDescription> cameras;
 
 class InsertProduct extends StatefulWidget {
   const InsertProduct({super.key});
@@ -21,6 +23,7 @@ class InsertProduct extends StatefulWidget {
 }
 
 class _InsertProductState extends State<InsertProduct> {
+  GetProductId getProductIdClass = GetProductId();
   final _formKey = GlobalKey<FormState>();
   String price = "";
   String basePrice = "";
@@ -30,6 +33,7 @@ class _InsertProductState extends State<InsertProduct> {
   String amountD = "";
   String gemstone = "";
   String amountG = "";
+  RxString id = "".obs;
   final diamondcontroller = TextEditingController();
   final amountDcontroller = TextEditingController();
   final pricecontroller = TextEditingController();
@@ -42,7 +46,6 @@ class _InsertProductState extends State<InsertProduct> {
   List<Widget> _dynamicWidgetsDiamond = [];
   List<Widget> _dynamicWidgetsGemstone = [];
   final ImagePicker picker = ImagePicker();
-  String id = "";
   File? image;
   var imageName = "ชื่อรูปภาพ";
 
@@ -67,12 +70,12 @@ class _InsertProductState extends State<InsertProduct> {
     return null; // Return null if the input is valid
   }
 
-  Future<void> getUserId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var ids = prefs.getString('Id');
-    setState(() {
-      id = ids!;
-    });
+  Future<void> ids() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString("Id") != null) {
+      id.value = prefs.getString("Id").toString();
+      print(id.value);
+    }
   }
 
   Future pickImage() async {
@@ -129,28 +132,27 @@ class _InsertProductState extends State<InsertProduct> {
       } else {
         if (detailArr == null) {
         } else {
-          if (diamondColorArr.isEmpty) {
-          } else if (_dynamicWidgetsDiamond.length > diamondColorArr.length) {
+          if (vars.diamondColorArr.isEmpty) {
+          } else if (_dynamicWidgetsDiamond.length >
+              vars.diamondColorArr.length) {
           } else {
-            diamondColorArr.removeAt(arr.length - 1);
+            vars.diamondColorArr.removeAt(arr.length - 1);
           }
-          if (diamondClarity.isEmpty) {
-          } else if (_dynamicWidgetsDiamond.length > diamondClarity.length) {
+          if (vars.diamondClarity.isEmpty) {
+          } else if (_dynamicWidgetsDiamond.length >
+              vars.diamondClarity.length) {
           } else {
-            diamondClarity.removeAt(arr.length - 1);
+            vars.diamondClarity.removeAt(arr.length - 1);
           }
-          if (diamondCut.isEmpty) {
-          } else if (_dynamicWidgetsDiamond.length > diamondCut.length) {
+          if (vars.diamondCut.isEmpty) {
+          } else if (_dynamicWidgetsDiamond.length > vars.diamondCut.length) {
           } else {
-            diamondCut.removeAt(arr.length - 1);
+            vars.diamondCut.removeAt(arr.length - 1);
           }
         }
         arr.removeAt(arr.length - 1);
         controller.removeAt(controller.length - 1);
         amount.removeAt(amount.length - 1);
-        print(diamondColorArr);
-        print(diamondClarity);
-        print(diamondCut);
       }
     });
   }
@@ -166,9 +168,9 @@ class _InsertProductState extends State<InsertProduct> {
 
     void clearValue() {
       setState(() {
-        selectedclarity = null;
-        selectedcolor = null;
-        selectedcut = null;
+        vars.selectedclarity = null;
+        vars.selectedcolor = null;
+        vars.selectedcut = null;
         _dynamicWidgetsDiamond = [];
         _dynamicWidgetsGemstone = [];
         diamond = "";
@@ -182,18 +184,18 @@ class _InsertProductState extends State<InsertProduct> {
         imageName = "ชื่อรูปภาพ";
         image = null;
         _controllerDiamond = [];
-        diamondColorArr = [];
-        diamondClarity = [];
-        diamondCut = [];
+        vars.diamondColorArr = [];
+        vars.diamondClarity = [];
+        vars.diamondCut = [];
         amountGemstone = [];
         caratGemstone = [];
-        material = [];
-        diamondJson = [];
-        gemstoneJson = [];
+        vars.material = [];
+        vars.diamondJson = [];
+        vars.gemstoneJson = [];
         amountG = "";
         gemstone = "";
-        amountDiamond = [];
-        caratDiamond = [];
+        vars.amountDiamond = [];
+        vars.caratDiamond = [];
       });
     }
 
@@ -244,6 +246,9 @@ class _InsertProductState extends State<InsertProduct> {
           // Request successful, handle the response
           var responseData = await response.stream.bytesToString();
           print('Response: ${json.decode(responseData)}');
+          GetProductDetails().getProductDetails();
+          GetProductDetails().getAllProduct();
+          pushProduct();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('ลงข้อมูลสำเร็จ'),
@@ -265,7 +270,7 @@ class _InsertProductState extends State<InsertProduct> {
       }
     }
 
-    getUserId();
+    ids();
     return Scaffold(
         body: SingleChildScrollView(
       child: SafeArea(
@@ -297,20 +302,20 @@ class _InsertProductState extends State<InsertProduct> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Row(
+                      Row(
                         children: [
-                          Text(
+                          const Text(
                             "รหัสสินค้า ",
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            "#RD 0100001",
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent),
-                          ),
+                          Obx(() => Text(
+                                '#$productCode $productId',
+                                style: const TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blueAccent),
+                              )),
                         ],
                       ),
                       const SizedBox(
@@ -333,21 +338,23 @@ class _InsertProductState extends State<InsertProduct> {
                           ),
                           child: SingleChildScrollView(
                             child: DropdownButtonHideUnderline(
-                              child: DropdownButton2<String>(
-                                isExpanded: true,
-                                hint: const Text("หมวดหมู่"),
-                                items: items
-                                    .map((String item) =>
-                                        DropdownMenuItem<String>(
-                                            value: item, child: Text(item)))
-                                    .toList(),
-                                value: selectedValue,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedValue = value;
-                                  });
-                                },
-                              ),
+                              child: Obx(() => DropdownButton2<String>(
+                                    isExpanded: true,
+                                    hint: const Text("หมวดหมู่"),
+                                    items: vars.items
+                                        .map((String item) =>
+                                            DropdownMenuItem<String>(
+                                                value: item, child: Text(item)))
+                                        .toList(),
+                                    value: vars.selectedValue!.value,
+                                    onChanged: (value) {
+                                      vars.selectedValue!.value = value!;
+                                      getProductIdClass.getProductId(
+                                          vars.category[vars.items.indexOf(
+                                              vars.selectedValue!.value)],
+                                          "insert");
+                                    },
+                                  )),
                             ),
                           )),
                       const SizedBox(
@@ -505,7 +512,7 @@ class _InsertProductState extends State<InsertProduct> {
                                             _dynamicWidgetsDiamond,
                                             _controllerDiamond,
                                             _amountDiamond,
-                                            diamondColorArr)
+                                            vars.diamondColorArr)
                                       },
                                   child: const Icon(Icons.delete)))
                         ]),
@@ -517,7 +524,7 @@ class _InsertProductState extends State<InsertProduct> {
                             Container(
                                 padding: const EdgeInsets.only(left: 0),
                                 alignment: Alignment.center,
-                                width: screen.size.width / 5,
+                                width: screen.size.width / 4.5,
                                 height: 50,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
@@ -527,16 +534,16 @@ class _InsertProductState extends State<InsertProduct> {
                                     child: DropdownButton2<String>(
                                       isExpanded: true,
                                       hint: const Text("น้ำ"),
-                                      items: diamondColor
+                                      items: vars.diamondColor
                                           .map((int item) =>
                                               DropdownMenuItem<String>(
                                                   value: item.toString(),
                                                   child: Text(item.toString())))
                                           .toList(),
-                                      value: selectedcolor,
+                                      value: vars.selectedcolor,
                                       onChanged: (value) {
                                         setState(() {
-                                          selectedcolor = value;
+                                          vars.selectedcolor = value;
                                         });
                                       },
                                       dropdownStyleData: DropdownStyleData(
@@ -570,16 +577,16 @@ class _InsertProductState extends State<InsertProduct> {
                                     child: DropdownButton2<String>(
                                       isExpanded: true,
                                       hint: const Text("ตำหนิ"),
-                                      items: clarity
+                                      items: vars.clarity
                                           .map((String item) =>
                                               DropdownMenuItem<String>(
                                                   value: item.toString(),
                                                   child: Text(item.toString())))
                                           .toList(),
-                                      value: selectedclarity,
+                                      value: vars.selectedclarity,
                                       onChanged: (value) {
                                         setState(() {
-                                          selectedclarity = value;
+                                          vars.selectedclarity = value;
                                         });
                                       },
                                       dropdownStyleData: DropdownStyleData(
@@ -613,16 +620,16 @@ class _InsertProductState extends State<InsertProduct> {
                                     child: DropdownButton2<String>(
                                       isExpanded: true,
                                       hint: const Text("รูปทรง"),
-                                      items: cut
+                                      items: vars.cut
                                           .map((String item) =>
                                               DropdownMenuItem<String>(
                                                   value: item.toString(),
                                                   child: Text(item.toString())))
                                           .toList(),
-                                      value: selectedcut,
+                                      value: vars.selectedcut,
                                       onChanged: (value) {
                                         setState(() {
-                                          selectedcut = value;
+                                          vars.selectedcut = value;
                                         });
                                       },
                                       dropdownStyleData: DropdownStyleData(
@@ -753,15 +760,15 @@ class _InsertProductState extends State<InsertProduct> {
                               child: DropdownButton2<String>(
                                 isExpanded: true,
                                 hint: const Text("ชนิดโลหะ"),
-                                items: goldType
+                                items: vars.goldType
                                     .map((String item) =>
                                         DropdownMenuItem<String>(
                                             value: item, child: Text(item)))
                                     .toList(),
-                                value: selectedValueGold,
+                                value: vars.selectedValueGold,
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedValueGold = value;
+                                    vars.selectedValueGold = value;
                                   });
                                 },
                               ),
@@ -915,7 +922,7 @@ class _InsertProductState extends State<InsertProduct> {
                                     if (_formKey.currentState!.validate())
                                       {
                                         _formKey.currentState!.save(),
-                                        if (selectedValue == null)
+                                        if (vars.selectedValue!.value == "")
                                           {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
@@ -925,7 +932,7 @@ class _InsertProductState extends State<InsertProduct> {
                                               ),
                                             )
                                           }
-                                        else if (selectedValueGold == null)
+                                        else if (vars.selectedValueGold == null)
                                           {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
@@ -947,53 +954,59 @@ class _InsertProductState extends State<InsertProduct> {
                                         else
                                           {
                                             setState(() {
-                                              caratDiamond.add(diamond);
-                                              amountDiamond.add(amountD);
+                                              vars.caratDiamond.add(diamond);
+                                              vars.amountDiamond.add(amountD);
                                               amountGemstone.add(amountG);
                                               caratGemstone.add(gemstone);
-                                              if (selectedcolor == null) {
+                                              if (vars.selectedcolor == null) {
                                               } else {
-                                                diamondColorArr.add(
-                                                    int.parse(selectedcolor!));
+                                                vars.diamondColorArr.add(
+                                                    int.parse(
+                                                        vars.selectedcolor!));
                                               }
-                                              if (selectedclarity == null) {
+                                              if (vars.selectedclarity ==
+                                                  null) {
                                               } else {
-                                                diamondClarity
-                                                    .add(selectedclarity);
+                                                vars.diamondClarity
+                                                    .add(vars.selectedclarity);
                                               }
-                                              if (selectedcut == null) {
+                                              if (vars.selectedcut == null) {
                                               } else {
-                                                diamondCut.add(selectedcut);
+                                                vars.diamondCut
+                                                    .add(vars.selectedcut);
                                               }
-                                              print(diamondColorArr);
+                                              print(vars.diamondColorArr);
 
                                               Map<String, dynamic> materialMap =
                                                   {
                                                 'MaterialType':
-                                                    selectedValueGold,
+                                                    vars.selectedValueGold,
                                                 'MaterialWeight': goldWeight,
                                                 'MaterialPercent': goldPercent,
                                               };
-                                              material.add(materialMap);
+                                              vars.material.add(materialMap);
 
                                               for (var i = 0;
-                                                  i < amountDiamond.length;
+                                                  i < vars.amountDiamond.length;
                                                   i++) {
-                                                print(caratDiamond);
+                                                print(vars.caratDiamond);
                                                 if (diamond.isEmpty) {
                                                 } else {
                                                   Map<String, dynamic>
                                                       diamondMap = {
-                                                    'Carat': caratDiamond[i],
-                                                    "Color": diamondColorArr[i],
-                                                    "Cut": diamondCut[i],
+                                                    'Carat':
+                                                        vars.caratDiamond[i],
+                                                    "Color":
+                                                        vars.diamondColorArr[i],
+                                                    "Cut": vars.diamondCut[i],
                                                     "Clarity":
-                                                        diamondClarity[i],
+                                                        vars.diamondClarity[i],
                                                     "Certificated": "None",
                                                     "Amount": int.parse(
-                                                        amountDiamond[i]),
+                                                        vars.amountDiamond[i]),
                                                   };
-                                                  diamondJson.add(diamondMap);
+                                                  vars.diamondJson
+                                                      .add(diamondMap);
                                                 }
                                               }
 
@@ -1010,26 +1023,31 @@ class _InsertProductState extends State<InsertProduct> {
                                                     "Amount": int.parse(
                                                         amountGemstone[x]),
                                                   };
-                                                  gemstoneJson.add(gemstoneMap);
+                                                  vars.gemstoneJson
+                                                      .add(gemstoneMap);
                                                 }
                                               }
                                               uploadFormData(
-                                                  productCategory:
-                                                      selectedValue.toString(),
-                                                  productCode: category[items
-                                                          .indexOf(selectedValue
+                                                  productCategory: vars
+                                                      .selectedValue!.value
+                                                      .toString(),
+                                                  productCode: vars
+                                                      .category[vars.items
+                                                          .indexOf(vars
+                                                              .selectedValue!
+                                                              .value
                                                               .toString())]
                                                       .toString(),
-                                                  createBy: int.parse(id),
+                                                  createBy: int.parse(id.value),
                                                   imagePath: imageName,
                                                   price: int.parse(price),
                                                   basePrice: basePrice,
-                                                  material: material,
-                                                  diamond: diamondJson,
-                                                  gemstone: gemstoneJson,
+                                                  material: vars.material,
+                                                  diamond: vars.diamondJson,
+                                                  gemstone: vars.gemstoneJson,
                                                   file: image!);
                                               clearValue();
-                                            })
+                                            }),
                                           },
                                       }
                                   },
