@@ -26,7 +26,7 @@ class _ProductCardState extends State<ProductCard> {
       productCode.value = widget.productName.substring(0, 2);
       productId.value = int.parse(widget.productName.substring(2, 9));
       selectedValue.value =
-          vars.items[vars.category.indexOf(productCode.value)];
+          vars.items[vars.category.indexOf(productCode.value)];  
       GetProductDetailsById()
           .getAllProduct(productId.toString(), productCode.toString());
       Get.to(() => const AdjustDetail());

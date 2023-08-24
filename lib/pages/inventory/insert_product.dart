@@ -99,7 +99,7 @@ class _InsertProductState extends State<InsertProduct> {
       _dynamicWidgetsDiamond.add(addElements(
           context,
           "จำนวนเพชร",
-          "กะรัต / เม็ด",
+          "กะรัต",
           _controllerDiamond[_controllerDiamond.length - 1],
           _amountDiamond[_amountDiamond.length - 1],
           _dynamicWidgetsDiamond.length));
@@ -113,7 +113,7 @@ class _InsertProductState extends State<InsertProduct> {
       _dynamicWidgetsGemstone.add(addElements(
           context,
           "จำนวนพลอย",
-          "กะรัต / เม็ด",
+          "กะรัต",
           _controllerGemstone[_controllerGemstone.length - 1],
           _amountGemstone[_amountGemstone.length - 1],
           _dynamicWidgetsGemstone.length));
@@ -211,9 +211,9 @@ class _InsertProductState extends State<InsertProduct> {
       required List<Map<String, dynamic>> gemstone,
       required File file,
     }) async {
-      //String url = 'http://10.0.2.2:8000/insertProduct';
+      //String url = 'http://49.0.192.147:8000/insertProduct';
       String url =
-          'http://10.0.2.2:8000/insertProduct?productCategory=${productCategory}&productCode=${productCode}&createBy=${createBy}&imagePath=${imageName}&price=${price}&basePrice=${basePrice}';
+          'http://49.0.192.147:8000/insertProduct?productCategory=${productCategory}&productCode=${productCode}&createBy=${createBy}&imagePath=${imageName}&price=${price}&basePrice=${basePrice}';
       Map<String, String> requestData = {
         // 'productCategory': productCategory,
         // 'createBy': createBy.toString(),
@@ -249,20 +249,12 @@ class _InsertProductState extends State<InsertProduct> {
           GetProductDetails().getProductDetails();
           GetProductDetails().getAllProduct();
           pushProduct();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('ลงข้อมูลสำเร็จ'),
-            ),
-          );
+          Get.snackbar("สำเร็จ", "ลงข้อมูลสำเร็จ");
         } else {
           // Request failed with an error status code
           print(request.fields.values);
           print('Request failed with status: ${response.statusCode}');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('ลงข้อมูลไม่สำเร็จ โปรดลองใหม่'),
-            ),
-          );
+          Get.snackbar("ไม่สำเร็จ", "ไม่สำเร็จ โปรดลองใหม่อีกครั้ง");
         }
       } catch (e) {
         // Error occurred during the request
@@ -432,7 +424,7 @@ class _InsertProductState extends State<InsertProduct> {
                                 controller: basePricecontroller,
                                 validator: _validateInput,
                                 onSaved: (value) {
-                                  basePrice = value!;
+                                  basePrice = value!.toUpperCase();
                                 },
                                 textInputAction: TextInputAction.next,
                                 textCapitalization:
@@ -493,7 +485,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
-                                      hintText: "กะรัต / เม็ด",
+                                      hintText: "กะรัต",
                                       border: InputBorder.none)),
                             ),
                           ]),
@@ -524,7 +516,7 @@ class _InsertProductState extends State<InsertProduct> {
                             Container(
                                 padding: const EdgeInsets.only(left: 0),
                                 alignment: Alignment.center,
-                                width: screen.size.width / 4.5,
+                                width: screen.size.width / 4.0,
                                 height: 50,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
@@ -567,7 +559,7 @@ class _InsertProductState extends State<InsertProduct> {
                             Container(
                                 padding: const EdgeInsets.only(left: 0),
                                 alignment: Alignment.center,
-                                width: screen.size.width / 3.2,
+                                width: screen.size.width / 3.8,
                                 height: 50,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
@@ -704,7 +696,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
-                                      hintText: "กะรัต / เม็ด",
+                                      hintText: "กะรัต",
                                       border: InputBorder.none)),
                             ),
                             SizedBox(
@@ -1046,6 +1038,17 @@ class _InsertProductState extends State<InsertProduct> {
                                                   diamond: vars.diamondJson,
                                                   gemstone: vars.gemstoneJson,
                                                   file: image!);
+                                              // uploadFormData(
+                                              //     productCategory: "Ring",
+                                              //     productCode: "RD",
+                                              //     createBy: 1,
+                                              //     imagePath: imageName,
+                                              //     price: 3333,
+                                              //     basePrice: "PRXX",
+                                              //     material: vars.material,
+                                              //     diamond: vars.diamondJson,
+                                              //     gemstone: vars.gemstoneJson,
+                                              //     file: image!);
                                               clearValue();
                                             }),
                                           },

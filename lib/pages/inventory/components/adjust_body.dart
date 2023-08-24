@@ -12,6 +12,7 @@ import '../controller/var.dart' as vars;
 import '../controller/var.dart' as items;
 
 RxString imageName = "ชื่อรูปภาพ".obs;
+RxString imagePath = "".obs;
 RxString selectedValue = vars.items[0].obs;
 RxString productCode = "RD".obs;
 RxInt productId = 1000001.obs;
@@ -222,6 +223,30 @@ Widget productCodeWidget() {
                 fontWeight: FontWeight.bold,
                 color: Colors.blueAccent),
           )),
+      const SizedBox(
+        width: 30,
+      ),
+      TextButton(
+          onPressed: () => {},
+          child: Container(
+            alignment: Alignment.center,
+            width: 60,
+            height: 30,
+            decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.shade200,
+                      offset: const Offset(0, 3),
+                      spreadRadius: 2,
+                      blurRadius: 2)
+                ]),
+            child: const Text(
+              "Print",
+              style: TextStyle(color: Colors.white),
+            ),
+          ))
     ],
   );
 }
@@ -229,15 +254,40 @@ Widget productCodeWidget() {
 Widget imagePicker() {
   return Row(
     children: [
-      Container(
-        padding: const EdgeInsets.only(left: 15),
-        alignment: Alignment.centerLeft,
-        width: Get.width / 1.55,
-        height: 60,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Colors.grey.shade200),
-        child: Obx(() => Text(imageName.value)),
+      TextButton(
+        onPressed: () => {
+          Get.dialog(
+            Center(
+              child: SizedBox(
+                width: Get.width / 1.2,
+                child: AspectRatio(
+                  aspectRatio: 100 / 100,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        image: DecorationImage(
+                            fit: BoxFit.fitWidth,
+                            alignment: FractionalOffset.topCenter,
+                            image: NetworkImage(imagePath.toString()))),
+                  ),
+                ),
+              ),
+            ),
+          )
+        },
+        child: Container(
+          padding: const EdgeInsets.only(left: 5, right: 5),
+          alignment: Alignment.centerLeft,
+          width: Get.width / 1.65,
+          height: 60,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.grey.shade200),
+          child: Obx(() => Text(
+                imageName.value,
+                style: TextStyle(color: Colors.grey.shade800),
+              )),
+        ),
       ),
       const SizedBox(
         width: 10,
@@ -428,8 +478,7 @@ class DiamondCardController extends GetxController {
                           textInputAction: TextInputAction.go,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
-                              hintText: "กะรัต / เม็ด",
-                              border: InputBorder.none)),
+                              hintText: "น้ำหนัก", border: InputBorder.none)),
                     ),
                     Text("กะรัต",
                         style: TextStyle(
@@ -452,7 +501,7 @@ class DiamondCardController extends GetxController {
               Container(
                   padding: const EdgeInsets.only(left: 0),
                   alignment: Alignment.center,
-                  width: Get.width / 4.5,
+                  width: Get.width / 4.0,
                   height: 50,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
@@ -507,7 +556,7 @@ class DiamondCardController extends GetxController {
               Container(
                   padding: const EdgeInsets.only(left: 0),
                   alignment: Alignment.center,
-                  width: Get.width / 3.2,
+                  width: Get.width / 3.8,
                   height: 50,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
@@ -712,8 +761,7 @@ class GemstoneCardController extends GetxController {
                           textInputAction: TextInputAction.go,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
-                              hintText: "กะรัต / เม็ด",
-                              border: InputBorder.none)),
+                              hintText: "น้ำหนัก", border: InputBorder.none)),
                     ),
                     Text("กะรัต",
                         style: TextStyle(

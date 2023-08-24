@@ -66,7 +66,7 @@ class _GemstoneCardState extends State<GemstoneCard> {
                 textInputAction: TextInputAction.go,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                    hintText: "กะรัต / เม็ด", border: InputBorder.none)),
+                    hintText: "กะรัต", border: InputBorder.none)),
           ),
         ],
       ),

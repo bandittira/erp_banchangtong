@@ -137,7 +137,7 @@ class HomePage extends StatelessWidget {
                             height: 10,
                           ),
                           const Text(
-                            "Latest added",
+                            "รายการเพิ่มล่าสุด",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
@@ -176,7 +176,7 @@ class HomePage extends StatelessWidget {
                             height: 10,
                           ),
                           const Text(
-                            "Latest sold",
+                            "รายการขายล่าสุด",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),

@@ -13,6 +13,18 @@ final List<String> items = [
   'หัวจรวจ',
 ];
 
+// final List<String> itemsEng = [
+//   'Ring',
+//   'Necklace',
+//   'Bracelet',
+//   'Bangle',
+//   'Pendant',
+//   'Earring',
+//   'กรอบพระ',
+//   'หัวจรวจ',
+// ];
+
+
 final List<String> category = [
   'RD',
   'NK',
@@ -20,7 +32,7 @@ final List<String> category = [
   'BG',
   'PD',
   'ER',
-  'RK',
+  'LK',
   'HJ',
 ];
 

@@ -8,8 +8,8 @@ import 'var.dart' as insert;
 
 class GetProductId {
   Future<void> getProductId(String productCodeString, String page) async {
-    const String baseUrl = 'http://10.0.2.2:8000';
-    const String endpoint = '/getProductId';
+    const String baseUrl = 'http://49.0.192.147:8000';
+    const String endpoint = '/getProductId/';
     try {
       if (productCodeString.isEmpty) {
         print('Product code is empty');
@@ -49,15 +49,16 @@ RxInt permissionId = 0.obs;
 class GetPermission {
   Future<void> submitForm(username, password, buttonType) async {
     try {
-      var response = await http.post(Uri.parse("http://10.0.2.2:8000/login"),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode({
-            "username": username,
-            "password": password,
-          }));
+      var response =
+          await http.post(Uri.parse("http://49.0.192.147:8000/login"),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+              },
+              body: jsonEncode({
+                "username": username,
+                "password": password,
+              }));
 
       if (response.statusCode == 200) {
         // Login successful
@@ -122,7 +123,7 @@ class GetPermission {
 class DeleteProduct {
   Future<void> deleteProduct(
       String productCodeString, String productIdString) async {
-    const String baseUrl = 'http://10.0.2.2:8000';
+    const String baseUrl = 'http://49.0.192.147:8000';
     String endpoint = '/deleteProduct/';
     try {
       if (productCodeString.isEmpty || productIdString.isEmpty) {

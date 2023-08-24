@@ -68,22 +68,24 @@ class _SimpleLoginScreenState extends State<SimpleLoginScreen> {
 
   Future<void> _submitForm(username, password) async {
     try {
-      var response = await http.post(Uri.parse("http://10.0.2.2:8000/login"),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode({
-            "username": username,
-            "password": password,
-          }));
+      var response =
+          await http.post(Uri.parse("http://49.0.192.147:8000/login"),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+              },
+              body: jsonEncode({
+                "username": username,
+                "password": password,
+              }));
 
       if (response.statusCode == 200) {
         // Login successful
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         var a = json.decode(response.body);
         print(a["message"]);
-        if (a["message"] == "Username or Password does not match" || a["message"] == "Login Fail") {
+        if (a["message"] == "Username or Password does not match" ||
+            a["message"] == "Login Fail") {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(

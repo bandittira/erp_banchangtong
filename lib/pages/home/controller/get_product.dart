@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 
 class GetProductDetails {
   Future getProductDetails() async {
-    const String baseUrl = 'http://10.0.2.2:8000';
-    const String endpoint = '/getLatestProduct';
+    const String baseUrl = 'http://49.0.192.147:8000';
+    const String endpoint = '/getLatestProduct/';
 
     try {
       final Uri uri = Uri.parse('$baseUrl$endpoint');
@@ -29,8 +29,8 @@ class GetProductDetails {
   }
 
   Future getAllProduct() async {
-    const String baseUrl = 'http://10.0.2.2:8000';
-    const String endpoint = '/getAllProduct';
+    const String baseUrl = 'http://49.0.192.147:8000';
+    const String endpoint = '/getAllProduct/';
 
     try {
       final Uri uri = Uri.parse('$baseUrl$endpoint');

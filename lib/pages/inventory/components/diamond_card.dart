@@ -85,7 +85,7 @@ class _DiamondCardState extends State<DiamondCard> {
               Container(
                   padding: const EdgeInsets.only(left: 0),
                   alignment: Alignment.center,
-                  width: screen.size.width / 4.5,
+                  width: screen.size.width / 4.0,
                   height: 50,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
@@ -142,7 +142,7 @@ class _DiamondCardState extends State<DiamondCard> {
               Container(
                   padding: const EdgeInsets.only(left: 0),
                   alignment: Alignment.center,
-                  width: screen.size.width / 3.2,
+                  width: screen.size.width / 3.8,
                   height: 50,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),

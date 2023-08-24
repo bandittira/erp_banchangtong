@@ -31,7 +31,6 @@ class _QRViewExampleState extends State<QRViewExample> {
 
   @override
   Widget build(BuildContext context) {
-    var screen = MediaQuery.of(context);
     return Scaffold(
       body: Stack(children: [
         Column(
@@ -39,12 +38,11 @@ class _QRViewExampleState extends State<QRViewExample> {
             Expanded(flex: 4, child: _buildQrView(context)),
           ],
         ),
-        SizedBox(
-          width: screen.size.width,
-          height: screen.size.height / 2,
+        Padding(
+          padding: const EdgeInsets.only(top: 150, left: 100),
           child: Container(
-            margin: const EdgeInsets.only(
-                top: 180, bottom: 180, right: 80, left: 80),
+            width: 180,
+            height: 50,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25), color: Colors.white),
             child: TextButton(

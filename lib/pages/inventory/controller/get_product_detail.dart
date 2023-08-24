@@ -10,8 +10,8 @@ class GetProductDetailsById {
     diamondColorArr.clear();
     diamondClarity.clear();
     diamondCut.clear();
-    const String baseUrl = 'http://10.0.2.2:8000';
-    String endpoint = '/getProduct/$id/$code';
+    const String baseUrl = 'http://49.0.192.147:8000';
+    String endpoint = '/getProduct/$id/$code/';
 
     try {
       final Uri uri = Uri.parse('$baseUrl$endpoint');
@@ -22,11 +22,11 @@ class GetProductDetailsById {
             json.decode(utf8.decode(response.bodyBytes));
         productDetailArray.assignAll(responseData['results']);
         imageName.value = productDetailArray['productDetail'][0]['ImageName'];
+        imagePath.value = productDetailArray['productDetail'][0]['ImagePath'];
         priceText.value.text =
             productDetailArray['productDetail'][0]['Price'].toString();
         basePriceText.value.text =
             productDetailArray['productDetail'][0]['BasePrice'];
-        print(productDetailArray['product'][0]['ProductCode']);
         return responseData['product'];
         // Handle the response data appropriately
       } else {
