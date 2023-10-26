@@ -36,10 +36,14 @@ class _InsertProductState extends State<InsertProduct> {
   RxString id = "".obs;
   final diamondcontroller = TextEditingController();
   final amountDcontroller = TextEditingController();
+  final gemstonecontroller = TextEditingController();
+  final amountGcontroller = TextEditingController();
   final pricecontroller = TextEditingController();
   final basePricecontroller = TextEditingController();
+  final goldWeightcontroller = TextEditingController();
+  final goldPercentcontroller = TextEditingController();
   List<TextEditingController> _controllerDiamond = [];
-  final List<TextEditingController> _controllerGemstone = [];
+  List<TextEditingController> _controllerGemstone = [];
   final List<TextEditingController> _amountDiamond = [];
   final List<TextEditingController> _amountGemstone = [];
 
@@ -175,6 +179,8 @@ class _InsertProductState extends State<InsertProduct> {
         _dynamicWidgetsGemstone = [];
         diamond = "";
         amountD = "";
+        amountG = "";
+        gemstone = "";
         diamondcontroller.text = "";
         amountDcontroller.text = "";
         pricecontroller.text = "";
@@ -184,6 +190,7 @@ class _InsertProductState extends State<InsertProduct> {
         imageName = "ชื่อรูปภาพ";
         image = null;
         _controllerDiamond = [];
+        _controllerGemstone = [];
         vars.diamondColorArr = [];
         vars.diamondClarity = [];
         vars.diamondCut = [];
@@ -196,6 +203,12 @@ class _InsertProductState extends State<InsertProduct> {
         gemstone = "";
         vars.amountDiamond = [];
         vars.caratDiamond = [];
+        goldPercent = "";
+        goldPercent = "";
+        goldWeightcontroller.text = "";
+        goldPercentcontroller.text = "";
+        amountGcontroller.text = "";
+        gemstonecontroller.text = "";
       });
     }
 
@@ -354,21 +367,44 @@ class _InsertProductState extends State<InsertProduct> {
                       ),
                       Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.only(left: 15),
-                            alignment: Alignment.centerLeft,
-                            width: screen.size.width / 1.55,
-                            height: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.grey.shade200),
-                            child: Text(imageName),
+                          TextButton(
+                            onPressed: () => {
+                              Get.dialog(Center(
+                                child: SizedBox(
+                                  width: Get.width / 1.5,
+                                  child: AspectRatio(
+                                    aspectRatio: 100 / 100,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        image: DecorationImage(
+                                          fit: BoxFit.fitWidth,
+                                          alignment: FractionalOffset.topCenter,
+                                          image: image != null
+                                              ? FileImage(File(image!.path))
+                                              : const AssetImage(
+                                                      'assets/logo.png')
+                                                  as ImageProvider, // Convert placeholder asset to File
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ))
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.only(left: 10),
+                              alignment: Alignment.centerLeft,
+                              width: screen.size.width / 1.55,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Colors.grey.shade200),
+                              child: Text(imageName),
+                            ),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
                           Container(
-                              width: screen.size.width / 4.5,
+                              width: screen.size.width / 5.2,
                               height: 60,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
@@ -442,6 +478,14 @@ class _InsertProductState extends State<InsertProduct> {
                         width: screen.size.width,
                         height: 1,
                         color: Colors.grey.withOpacity(0.3),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const Text(
+                        "เพชร",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 15, bottom: 15),
@@ -656,6 +700,14 @@ class _InsertProductState extends State<InsertProduct> {
                         height: 1,
                         color: Colors.grey.withOpacity(0.3),
                       ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const Text(
+                        "พลอย",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 15, bottom: 15),
                         child: Row(
@@ -669,6 +721,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   borderRadius: BorderRadius.circular(15),
                                   color: Colors.grey.shade200),
                               child: TextFormField(
+                                  controller: amountGcontroller,
                                   onSaved: (value) {
                                     amountG = value!;
                                   },
@@ -690,6 +743,7 @@ class _InsertProductState extends State<InsertProduct> {
                                   borderRadius: BorderRadius.circular(15),
                                   color: Colors.grey.shade200),
                               child: TextFormField(
+                                  controller: gemstonecontroller,
                                   onSaved: (value) {
                                     gemstone = value!;
                                   },
@@ -740,6 +794,14 @@ class _InsertProductState extends State<InsertProduct> {
                       const SizedBox(
                         height: 15,
                       ),
+                      const Text(
+                        "โลหะ",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       Container(
                           width: screen.size.width / 0.175,
                           height: 60,
@@ -784,6 +846,7 @@ class _InsertProductState extends State<InsertProduct> {
                               children: [
                                 Expanded(
                                   child: TextFormField(
+                                    controller: goldWeightcontroller,
                                     validator: _validateInputNum,
                                     onSaved: (value) {
                                       goldWeight = value!;
@@ -824,6 +887,7 @@ class _InsertProductState extends State<InsertProduct> {
                               children: [
                                 Expanded(
                                   child: TextFormField(
+                                    controller: goldPercentcontroller,
                                     validator: _validateInputNum,
                                     onSaved: (value) {
                                       goldPercent = value!;

@@ -5,6 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import '../inventory/controller/var.dart' as vars;
+import '../inventory/components/adjust_body.dart';
+import '../inventory/controller/get_product_detail.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({Key? key}) : super(key: key);
@@ -17,6 +20,15 @@ class _QRViewExampleState extends State<QRViewExample> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  void getProductDetail() {
+    productCode.value = result!.code.toString().substring(0, 2);
+    productId.value = int.parse(result!.code.toString().substring(2, 9));
+    selectedValue.value = vars.items[vars.category.indexOf(productCode.value)];
+    GetProductDetailsById()
+        .getAllProduct(productId.toString(), productCode.toString());
+    Get.off(() => const AdjustDetail());
+  }
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -38,23 +50,26 @@ class _QRViewExampleState extends State<QRViewExample> {
             Expanded(flex: 4, child: _buildQrView(context)),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 150, left: 100),
-          child: Container(
-            width: 180,
-            height: 50,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25), color: Colors.white),
-            child: TextButton(
-              onPressed: () => {
-                result != null
-                    ? Get.to(const AdjustDetail())
-                    : Get.snackbar('ไม่สามารถแสกนได้', 'โปรดแสกนใหม่อีกครั้ง')
-              },
-              child: Center(
-                child: (result != null)
-                    ? Text('Data: ${result!.code}')
-                    : const Text('โปรดแสกน QR Code'),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 400),
+            child: Container(
+              width: 180,
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25), color: Colors.white),
+              child: TextButton(
+                onPressed: () => {
+                  if (result != null)
+                    {getProductDetail()}
+                  else
+                    {Get.snackbar('ไม่สามารถแสกนได้', 'โปรดแสกนใหม่อีกครั้ง')}
+                },
+                child: Center(
+                  child: (result != null)
+                      ? Text('รหัส ${result!.code}')
+                      : const Text('โปรดแสกน QR Code'),
+                ),
               ),
             ),
           ),

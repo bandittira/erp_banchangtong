@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:erp_banchangtong/pages/inventory/adjust_detail.dart';
 import 'package:erp_banchangtong/pages/inventory/controller/image_picker.dart';
+import 'package:erp_banchangtong/pages/printer/printer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -37,6 +38,9 @@ RxString basePriceTemp = "".obs;
 final priceText = TextEditingController().obs;
 final basePriceText = TextEditingController().obs;
 
+final goldWeight = TextEditingController().obs;
+final goldPercent = TextEditingController().obs;
+
 class WidgetBody extends StatelessWidget {
   const WidgetBody({Key? key}) : super(key: key);
 
@@ -66,9 +70,45 @@ class WidgetBody extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        const Text(
-          "รายละเอียด",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            const Text(
+              "รายละเอียด",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            TextButton(
+                onPressed: () => {
+                      Get.to(Printer(
+                          "title",
+                          productCode.value + productId.value.toString(),
+                          priceText.value.text.toString(),
+                          basePriceText.value.text.toString(),
+                          selectedValueGold.value.toString(),
+                          goldWeight.value.text.toString(),
+                          goldPercent.value.text.toString(),
+                          amountDiamond,
+                          amountGemstone))
+                    },
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 60,
+                  height: 30,
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.shade200,
+                            offset: const Offset(0, 3),
+                            spreadRadius: 2,
+                            blurRadius: 2)
+                      ]),
+                  child: const Text(
+                    "Print",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ))
+          ],
         ),
         const SizedBox(
           height: 15,
@@ -226,27 +266,6 @@ Widget productCodeWidget() {
       const SizedBox(
         width: 30,
       ),
-      TextButton(
-          onPressed: () => {},
-          child: Container(
-            alignment: Alignment.center,
-            width: 60,
-            height: 30,
-            decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(25),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.shade200,
-                      offset: const Offset(0, 3),
-                      spreadRadius: 2,
-                      blurRadius: 2)
-                ]),
-            child: const Text(
-              "Print",
-              style: TextStyle(color: Colors.white),
-            ),
-          ))
     ],
   );
 }
@@ -402,11 +421,19 @@ class DiamondCardController extends GetxController {
         productDetailArray['productDiamonds'][index]['Carat'].toString();
     // }
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: Get.width,
           height: 1,
           color: Colors.grey.withOpacity(0.3),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        const Text(
+          "เพชร",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 15, bottom: 15),
@@ -685,11 +712,19 @@ class GemstoneCardController extends GetxController {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: Get.width,
           height: 1,
           color: Colors.grey.withOpacity(0.3),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        const Text(
+          "พลอย",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 15, bottom: 15),
@@ -791,23 +826,28 @@ class Gold extends GetxController {
   }
 
   Widget gold() {
-    final goldWeight = TextEditingController();
-    final goldPercent = TextEditingController();
     if (productDetailArray['productMaterials'] == null ||
         productDetailArray['productMaterials'].isEmpty) {
     } else {
-      goldWeight.text = productDetailArray['productMaterials'][0]
+      goldWeight.value.text = productDetailArray['productMaterials'][0]
               ['MaterialWeight']
           .toString();
-      goldPercent.text = productDetailArray['productMaterials'][0]
+      goldPercent.value.text = productDetailArray['productMaterials'][0]
               ['MaterialPercent']
           .toString();
     }
-    return Column(children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
         width: Get.width,
         height: 1,
         color: Colors.grey.withOpacity(0.3),
+      ),
+      const SizedBox(
+        height: 15,
+      ),
+      const Text(
+        "โลหะ",
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       const SizedBox(
         height: 15,
@@ -853,10 +893,10 @@ class Gold extends GetxController {
               children: [
                 Expanded(
                   child: TextFormField(
-                    controller: goldWeight,
+                    controller: goldWeight.value,
                     validator: validateInputNum,
                     onSaved: (value) {
-                      goldWeight.text = value!;
+                      goldWeight.value.text = value!;
                     },
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
@@ -894,10 +934,10 @@ class Gold extends GetxController {
               children: [
                 Expanded(
                   child: TextFormField(
-                    controller: goldPercent,
+                    controller: goldPercent.value,
                     validator: validateInputNum,
                     onSaved: (value) {
-                      goldPercent.text = value!;
+                      goldPercent.value.text = value!;
                     },
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
@@ -1056,12 +1096,7 @@ alertVerification(buttonType) {
                             onPressed: () {
                               GetPermission().submitForm(
                                   username.value, password.value, buttonType);
-                              print(productCode.value);
-                              print(allProduct.indexOf(productCode.value +
-                                  productId.value.toString()));
-                              allProduct.removeAt(allProduct.indexOf(
-                                  productCode.value +
-                                      productId.value.toString()));
+
                               Get.off(const AdjustDetail());
                             },
                             child: const Text(

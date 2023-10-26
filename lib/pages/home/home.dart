@@ -195,7 +195,7 @@ class HomePage extends StatelessWidget {
                                           "Nike Air Force",
                                           "20pcs + 8 colors + 12 Sizes",
                                           3600,
-                                          "https://scontent.fbkk23-1.fna.fbcdn.net/v/t39.30808-6/367472032_732655418877804_742305069239873215_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeErAT1V3XxeU2TWVAzxCmZ_v-RngpIocyi_5GeCkihzKHdvC3cPl9T6WSQ6CnNisY-jxWs1vpvNJaDi8WQuPMfm&_nc_ohc=Im3y9SBk6ccAX8XdwhJ&_nc_ht=scontent.fbkk23-1.fna&oh=00_AfDG5yOMg5rO37LeZedm71TXOHwrCpayGyy5hzG53l7UPw&oe=64E8322C",
+                                          "https://banchangtong.obs.ap-southeast-2.myhuaweicloud.com/_DSC3937.png",
                                           "latest_sold"),
                                   ],
                                 ),

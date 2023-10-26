@@ -41,6 +41,8 @@ dependencies:
   shared_preferences: ^2.2.0
   flutter_launcher_icons: ^0.13.1
   bluetooth_print:
+  printing: ^5.11.0
+  pdf: ^3.10.4
 
   # Widgets
   fl_chart: ^0.63.0
@@ -92,7 +94,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/product.jpg
+    - assets/logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
